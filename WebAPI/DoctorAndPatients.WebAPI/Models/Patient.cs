@@ -12,20 +12,21 @@ namespace DoctorAndPatients.WebAPI.Models
         public Guid? Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int HealthSecurityNumber { get; set; }
+
+        //unique for every person that has health insurance
+        public int HealthInsuranceID { get; set; }
         public string Diagnosis { get; set; }
 
         // foreign key - relation one doctor has many patients, patient has one doctor
-        public int DoctorId { get; set; }
+        public Guid DoctorId { get; set; }
 
-        public Patient(string firstName, string lastName, int hsNumber, string diagnosis, int docId)
+        public Patient(string firstName, string lastName, int hsNumber, string diagnosis)
         {
             this.Id = Guid.NewGuid();
             this.FirstName = firstName;
             this.LastName = lastName;
-            this.HealthSecurityNumber = hsNumber;
+            this.HealthInsuranceID = hsNumber;
             this.Diagnosis = diagnosis;
-            this.DoctorId = docId;
         }
     }
 
@@ -38,10 +39,10 @@ namespace DoctorAndPatients.WebAPI.Models
         {
             patients = new List<Patient>()
             {
-                new Patient("John", "Sima", 7478458, "Contact allergy", 3),
-                new Patient("Mark", "Merz", 4545455, "Diabetes", 1),
-                new Patient("Jess", "Rodhos", 8859403, "Nut allergy", 1),
-                new Patient("Ann", "Marthos", 9663839, "High blood pressure", 2)
+                new Patient("John", "Sima", 7478458, "Contact allergy"),
+                new Patient("Mark", "Merz", 4545455, "Diabetes"),
+                new Patient("Jess", "Rodhos", 8859403, "Nut allergy"),
+                new Patient("Ann", "Marthos", 9663839, "High blood pressure")
             };
         }
         public static SingletonPatientsList Instance

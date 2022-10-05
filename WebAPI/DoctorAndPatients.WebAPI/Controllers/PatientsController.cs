@@ -16,6 +16,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
     public class PatientsController : ApiController
     {
         //private DoctorAndPatientsWebAPIContext db = new DoctorAndPatientsWebAPIContext();
+        private string dbConnection = "host=localhost;uid=root;pwd=trebAmo10;database=doctorandpatients";
         public List<Patient> patients = SingletonPatientsList.Instance.patients;
 
         // GET: api/Patients
@@ -59,7 +60,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
                 Patient existingPatient = patients.First(i => i.Id == id);
                 existingPatient.FirstName = patient.FirstName;
                 existingPatient.LastName = patient.LastName;
-                existingPatient.HealthSecurityNumber = patient.HealthSecurityNumber;
+                existingPatient.HealthInsuranceID = patient.HealthInsuranceID;
                 existingPatient.Diagnosis = patient.Diagnosis;
                 existingPatient.DoctorId = patient.DoctorId;
 
