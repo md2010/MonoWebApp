@@ -1,0 +1,9 @@
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\DoctorAndPatients.Model.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\DoctorAndPatients.Model.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\DoctorAndPatients.Model.Common.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\DoctorAndPatients.Model.Common.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\obj\Debug\DoctorAndPatients.Model.csproj.AssemblyReference.cache
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\obj\Debug\DoctorAndPatients.Model.csproj.CoreCompileInputs.cache
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\obj\Debug\DoctorAndPatients.Model.csproj.CopyComplete
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\obj\Debug\DoctorAndPatients.Model.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\obj\Debug\DoctorAndPatients.Model.pdb

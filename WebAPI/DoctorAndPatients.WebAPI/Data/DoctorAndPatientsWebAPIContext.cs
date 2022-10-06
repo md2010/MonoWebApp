@@ -18,9 +18,6 @@ namespace DoctorAndPatients.WebAPI.Data
         public DoctorAndPatientsWebAPIContext() : base("name=DoctorAndPatientsWebAPIContext")
         {
         }
-
-        public System.Data.Entity.DbSet<DoctorAndPatients.WebAPI.Models.Patient> Patients { get; set; }
-
-        public System.Data.Entity.DbSet<DoctorAndPatients.WebAPI.Models.Doctor> Doctors { get; set; }
+      
     }
 }

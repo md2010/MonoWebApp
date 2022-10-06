@@ -1,0 +1,6 @@
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\bin\Debug\DoctorAndPatients.DAL.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\bin\Debug\DoctorAndPatients.DAL.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\obj\Debug\DoctorAndPatients.DAL.csproj.AssemblyReference.cache
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\obj\Debug\DoctorAndPatients.DAL.csproj.CoreCompileInputs.cache
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\obj\Debug\DoctorAndPatients.DAL.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\obj\Debug\DoctorAndPatients.DAL.pdb

@@ -177,8 +177,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Doctor.cs" />
-    <Compile Include="Models\Patient.cs" />
+    <Compile Include="Models\DoctorREST.cs" />
+    <Compile Include="Models\PatientREST.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +266,16 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DoctorAndPatients.Model\DoctorAndPatients.Model.csproj">
+      <Project>{9177D848-E6BE-4628-AB5C-B975B281C6EC}</Project>
+      <Name>DoctorAndPatients.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DoctorAndPatients.Service\DoctorAndPatients.Service.csproj">
+      <Project>{4D328B02-4984-4100-BC2A-CDD178C57A81}</Project>
+      <Name>DoctorAndPatients.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

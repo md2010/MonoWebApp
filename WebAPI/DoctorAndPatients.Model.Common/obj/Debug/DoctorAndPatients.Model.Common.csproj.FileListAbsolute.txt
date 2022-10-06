@@ -1,0 +1,5 @@
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\bin\Debug\DoctorAndPatients.Model.Common.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\bin\Debug\DoctorAndPatients.Model.Common.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\obj\Debug\DoctorAndPatients.Model.Common.csproj.CoreCompileInputs.cache
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\obj\Debug\DoctorAndPatients.Model.Common.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\obj\Debug\DoctorAndPatients.Model.Common.pdb

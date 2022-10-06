@@ -4,6 +4,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAndPatients.WebAPI", "DoctorAndPatients.WebAPI\DoctorAndPatients.WebAPI.csproj", "{B5032D8E-3D8D-40B5-AD86-8F6CBF88A366}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4D328B02-4984-4100-BC2A-CDD178C57A81} = {4D328B02-4984-4100-BC2A-CDD178C57A81}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAndPatients.Service", "DoctorAndPatients.Service\DoctorAndPatients.Service.csproj", "{4D328B02-4984-4100-BC2A-CDD178C57A81}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9177D848-E6BE-4628-AB5C-B975B281C6EC} = {9177D848-E6BE-4628-AB5C-B975B281C6EC}
+		{8DD523C5-2FDB-4746-AABD-571C225287D2} = {8DD523C5-2FDB-4746-AABD-571C225287D2}
+		{0B1400D1-DAFF-4DBF-B3DF-C912125BF750} = {0B1400D1-DAFF-4DBF-B3DF-C912125BF750}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAndPatients.Repository", "DoctorAndPatients.Repository\DoctorAndPatients.Repository.csproj", "{8DD523C5-2FDB-4746-AABD-571C225287D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAndPatients.DAL", "DoctorAndPatients.DAL\DoctorAndPatients.DAL.csproj", "{75AE2CD6-342C-4677-86B6-073C6714D350}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAndPatients.Service.Common", "DoctorAndPatients.Service.Common\DoctorAndPatients.Service.Common.csproj", "{0B1400D1-DAFF-4DBF-B3DF-C912125BF750}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAndPatients.RepositoryCommon", "DoctorAndPatients.RepositoryCommon\DoctorAndPatients.RepositoryCommon.csproj", "{0B1368B9-7B2C-4975-9FB5-0F447EF6F2DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAndPatients.Model", "DoctorAndPatients.Model\DoctorAndPatients.Model.csproj", "{9177D848-E6BE-4628-AB5C-B975B281C6EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{42FE9658-4BC7-4B01-9C5B-68BDFCFB7DD6} = {42FE9658-4BC7-4B01-9C5B-68BDFCFB7DD6}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoctorAndPatients.Model.Common", "DoctorAndPatients.Model.Common\DoctorAndPatients.Model.Common.csproj", "{42FE9658-4BC7-4B01-9C5B-68BDFCFB7DD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +40,34 @@ Global
 		{B5032D8E-3D8D-40B5-AD86-8F6CBF88A366}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5032D8E-3D8D-40B5-AD86-8F6CBF88A366}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5032D8E-3D8D-40B5-AD86-8F6CBF88A366}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D328B02-4984-4100-BC2A-CDD178C57A81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D328B02-4984-4100-BC2A-CDD178C57A81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D328B02-4984-4100-BC2A-CDD178C57A81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D328B02-4984-4100-BC2A-CDD178C57A81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DD523C5-2FDB-4746-AABD-571C225287D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DD523C5-2FDB-4746-AABD-571C225287D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DD523C5-2FDB-4746-AABD-571C225287D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DD523C5-2FDB-4746-AABD-571C225287D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75AE2CD6-342C-4677-86B6-073C6714D350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75AE2CD6-342C-4677-86B6-073C6714D350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75AE2CD6-342C-4677-86B6-073C6714D350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75AE2CD6-342C-4677-86B6-073C6714D350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B1400D1-DAFF-4DBF-B3DF-C912125BF750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B1400D1-DAFF-4DBF-B3DF-C912125BF750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B1400D1-DAFF-4DBF-B3DF-C912125BF750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B1400D1-DAFF-4DBF-B3DF-C912125BF750}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B1368B9-7B2C-4975-9FB5-0F447EF6F2DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B1368B9-7B2C-4975-9FB5-0F447EF6F2DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B1368B9-7B2C-4975-9FB5-0F447EF6F2DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B1368B9-7B2C-4975-9FB5-0F447EF6F2DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9177D848-E6BE-4628-AB5C-B975B281C6EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9177D848-E6BE-4628-AB5C-B975B281C6EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9177D848-E6BE-4628-AB5C-B975B281C6EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9177D848-E6BE-4628-AB5C-B975B281C6EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42FE9658-4BC7-4B01-9C5B-68BDFCFB7DD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42FE9658-4BC7-4B01-9C5B-68BDFCFB7DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42FE9658-4BC7-4B01-9C5B-68BDFCFB7DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42FE9658-4BC7-4B01-9C5B-68BDFCFB7DD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

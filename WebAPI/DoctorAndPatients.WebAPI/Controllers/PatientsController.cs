@@ -8,6 +8,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using DoctorAndPatients.Model;
+using DoctorAndPatients.Service;
 using DoctorAndPatients.WebAPI.Data;
 using DoctorAndPatients.WebAPI.Models;
 
@@ -15,101 +17,127 @@ namespace DoctorAndPatients.WebAPI.Controllers
 {
     public class PatientsController : ApiController
     {
-        //private DoctorAndPatientsWebAPIContext db = new DoctorAndPatientsWebAPIContext();
-        private string dbConnection = "host=localhost;uid=root;pwd=trebAmo10;database=doctorandpatients";
-        public List<Patient> patients = SingletonPatientsList.Instance.patients;
+        private PatientService patientService = new PatientService();
 
         // GET: api/Patients
         [HttpGet]
         public HttpResponseMessage GetPatients()
         {
-            if(patients.Count == 0)
+            List<Patient> patients = patientService.GetAll();
+            List<PatientREST> patientsREST = MapToREST(patients);
+
+            if (patientsREST != null)
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
+                return Request.CreateResponse(HttpStatusCode.OK, patientsREST);
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.OK, patients);
-            }          
+                return Request.CreateResponse(HttpStatusCode.NoContent, "No patients in database.");
+            }
         }
 
         // GET: api/Patients/5
         [HttpGet]
         public HttpResponseMessage GetPatient(Guid id)
         {
-            if(!PatientExists(id))
+            List<Patient> patients = new List<Patient> { patientService.GetByID(id) };
+            List<PatientREST> patientsREST = MapToREST(patients);
+
+            if (patientsREST[0] != null)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.OK, patientsREST[0]);
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.OK, patients.First(i => i.Id == id));
-            } 
+                return Request.CreateResponse(HttpStatusCode.NoContent, "Patient with that ID doesn't exist.");
+            }
         }
 
         // PUT: api/Patients/5
         [HttpPut]
-        public HttpResponseMessage PutPatient(Guid id, Patient patient)
+        public HttpResponseMessage PutPatient(Guid id, PatientREST patientREST)
         {
-            if (!PatientExists(id) || patient == null)
+            patientREST.Id = id;
+            List<PatientREST> patientsREST = new List<PatientREST> { patientREST };
+            List<Patient> patients = MapToDomain(patientsREST);
+
+            if (patientService.Update(id, patients))
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.OK, "Updated successfully!");
             }
             else
             {
-                Patient existingPatient = patients.First(i => i.Id == id);
-                existingPatient.FirstName = patient.FirstName;
-                existingPatient.LastName = patient.LastName;
-                existingPatient.HealthInsuranceID = patient.HealthInsuranceID;
-                existingPatient.Diagnosis = patient.Diagnosis;
-                existingPatient.DoctorId = patient.DoctorId;
-
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong.");
             }
-
         }         
 
         // POST: api/Patients
         [HttpPost]
-        public HttpResponseMessage PostPatient(Patient patient)
+        public HttpResponseMessage PostPatient(PatientREST patientREST)
         {
-            if(patient == null)
+            List<PatientREST> patientsREST = new List<PatientREST> { patientREST };
+            List<Patient> patients = MapToDomain(patientsREST);
+
+            if (patientService.Create(patients))
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.OK, "Inserted successfully!");
             }
-            patients.Add(patient);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong.");
+            }
         }
 
         // DELETE: api/Patients/5
         public HttpResponseMessage DeletePatient(Guid id)
         {
-            if (!PatientExists(id))
+            if (patientService.Delete(id))
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.OK, "Deleted successfully!");
             }
             else
             {
-                patients.Remove(patients.First(i => i.Id == id));
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong.");
             }
         }
 
-        private bool PatientExists(Guid id)
+
+        private List<Patient> MapToDomain(List<PatientREST> patientsRest)
         {
-            try
+            List<Patient> patients = new List<Patient>();
+            if (patientsRest.Count > 0)
             {
-                if(patients.First(i => i.Id == id) != null)
+                foreach (PatientREST pREST in patientsRest)
                 {
-                    return true;
+                    Guid docID = patientService.GetByID(pREST.Id.Value).DoctorId;
+                    Patient patient = new Patient((Guid)pREST.Id, pREST.FirstName, pREST.LastName, pREST.HealthInsuranceID, pREST.Diagnosis, docID);
+                    patients.Add(patient);
                 }
+                return patients;
             }
-            catch (Exception e)
+            else
             {
-                return false;
-                throw (e);
+                return null;
             }
-            return false;
         }
+
+        private List<PatientREST> MapToREST(List<Patient> patients)
+        {
+            List<PatientREST> patientsREST = new List<PatientREST>();
+            if (patients.Count > 0)
+            {
+                foreach (Patient p in patients)
+                {
+                    PatientREST patient = new PatientREST(p.Id.Value, p.FirstName, p.LastName, p.HealthInsuranceID, p.Diagnosis);
+                    patientsREST.Add(patient);
+                }
+                return patientsREST;
+            }
+            else
+            {
+                return null;
+            }
+        }
+       
     }
 }

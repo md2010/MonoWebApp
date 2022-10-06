@@ -1,0 +1,11 @@
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\bin\Debug\DoctorAndPatients.Service.Common.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\bin\Debug\DoctorAndPatients.Service.Common.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\bin\Debug\DoctorAndPatients.Model.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\bin\Debug\DoctorAndPatients.Model.Common.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\bin\Debug\DoctorAndPatients.Model.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\bin\Debug\DoctorAndPatients.Model.Common.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\obj\Debug\DoctorAndPatients.Service.Common.csproj.AssemblyReference.cache
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\obj\Debug\DoctorAndPatients.Service.Common.csproj.CoreCompileInputs.cache
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\obj\Debug\DoctorAndPatients.Service.Common.csproj.CopyComplete
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\obj\Debug\DoctorAndPatients.Service.Common.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Service.Common\obj\Debug\DoctorAndPatients.Service.Common.pdb

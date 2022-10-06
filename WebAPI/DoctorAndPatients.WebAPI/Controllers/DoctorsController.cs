@@ -9,184 +9,136 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DoctorAndPatients.WebAPI.Data;
+using DoctorAndPatients.Model;
+using DoctorAndPatients.Service;
 using DoctorAndPatients.WebAPI.Models;
-using MySql.Data.MySqlClient;
-using System.Configuration;
-using Newtonsoft.Json;
 
 namespace DoctorAndPatients.WebAPI.Controllers
 {
     public class DoctorsController : ApiController
     {
-        //private DoctorAndPatientsWebAPIContext db = new DoctorAndPatientsWebAPIContext();       
-
-        public List<Doctor> doctors = SingletonDoctorsList.Instance.doctors;
-        private static readonly string connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-        MySqlConnection conn;
-
+        private DoctorService doctorService = new DoctorService();
+      
         // GET: api/Doctors
         [HttpGet]
         public HttpResponseMessage GetDoctors()
-        {         
-            try
-            {              
-                conn = new MySqlConnection();
-                conn.ConnectionString = connectionString;               
-                MySqlCommand command = new MySqlCommand("SELECT * FROM doctor", conn);
-                conn.Open();
+        {
+            List<Doctor> doctors = doctorService.GetAll();
+            List<DoctorREST> doctorsREST = MapToREST(doctors);
 
-                MySqlDataReader reader = command.ExecuteReader();
-                List<Doctor> list = new List<Doctor>();
-                while (reader.Read())
-                {
-                     list.Add(ReadSingleRow(reader));
-                }
-                conn.Close();
-                return Request.CreateResponse(HttpStatusCode.OK, list);                                                                      
-            }
-
-            catch (MySqlException ex)
+            if(doctors != null)
             {
-                conn.Close();
-                return Request.CreateResponse(HttpStatusCode.NotFound, ex);
-                throw ex;
+                return Request.CreateResponse(HttpStatusCode.OK, doctorsREST);
             }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.NoContent, "No doctors in database.");
+            }           
         }
 
         // GET: api/Doctors/5
         [HttpGet]
         public HttpResponseMessage GetDoctor(Guid id)
         {
-            try
+            Doctor doctor = doctorService.GetByID(id);
+            List<DoctorREST> doctorsREST = MapToREST(new List<Doctor> { doctor });
+
+            if (doctorsREST[0] != null)
             {
-                conn = new MySqlConnection();
-                conn.ConnectionString = connectionString;
-                MySqlCommand command = new MySqlCommand("SELECT * FROM doctor WHERE id = \"" + id + "\"", conn);
-                conn.Open();
-                MySqlDataReader reader = command.ExecuteReader();
-
-                if(!reader.HasRows)
-                {
-                    return Request.CreateResponse(HttpStatusCode.NoContent, "No doctors in DB!");
-                }
-
-                Doctor doc = null;
-                while (reader.Read())
-                {
-                    doc = ReadSingleRow(reader);
-                }
-                conn.Close();
-                return Request.CreateResponse(HttpStatusCode.OK, doc);
+                return Request.CreateResponse(HttpStatusCode.OK, doctorsREST[0]);
             }
-
-            catch (MySqlException ex)
+            else
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound, ex);
-                throw ex;
-            }                     
+                return Request.CreateResponse(HttpStatusCode.NoContent, "Doctor with that ID doesn't exist.");
+            }
         }
 
         // PUT: api/Doctors/5
         [HttpPut]
-        public HttpResponseMessage PutDoctor(Guid id, Doctor doctor)
+        public HttpResponseMessage PutDoctor(Guid id, DoctorREST doctorREST)
         {
-            //get data
-            conn = new MySqlConnection();
-            conn.ConnectionString = connectionString;
-            MySqlDataAdapter ad = new MySqlDataAdapter("SELECT * FROM doctor", conn);
-            DataSet doc = new DataSet();
-            ad.Fill(doc, "Doctors");
-            DataTable docTable = doc.Tables["Doctors"];           
-            DataRow row = docTable.Rows.Find(id); //get index of row for update
-            int index = docTable.Rows.IndexOf(row);
+            doctorREST.Id = id;
+            List<DoctorREST> doctorsREST = new List<DoctorREST> { doctorREST };           
+            List<Doctor> doctors = MapToDomain(doctorsREST);
 
-            //updating....
-            docTable.Rows[index]["firstName"] = doctor.FirstName;
-            docTable.Rows[index]["lastName"] = doctor.LastName;
-            docTable.Rows[index]["UPIN"] = doctor.UPIN;
-            docTable.Rows[index]["ambulanceAddress"] = doctor.AmbulanceAddress;
-
-            string update = @"update doctor set firstName = @firstname, lastName = @lastName, UPIN = @UPIN, ambulanceAddress = @ambulanceAddress where id = @id"; ;
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            try
+            if (doctorService.Update(id, doctors))
             {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand(update, conn);
-                cmd.Parameters.Add("@firstName", MySqlDbType.VarChar,15,"firstname");
-                cmd.Parameters.Add("@id", MySqlDbType.VarChar, 15, "id");
-                cmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 15, "lastName");
-                cmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 15, "UPIN");
-                cmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 15, "ambulanceAddress");
-                //select the update command
-                adapter.UpdateCommand = cmd;
-                //update the data source
-                adapter.Update(doc, "Doctors");
-                return Request.CreateResponse(HttpStatusCode.OK, "Updated succesfully!");
+                return Request.CreateResponse(HttpStatusCode.OK, "Updated successfully!");
             }
-
-            catch (MySqlException ex)
+            else
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, ex);
-                throw ex;
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong.");
             }
-
+            
         }         
 
         // POST: api/Doctors
         [HttpPost]
-        public HttpResponseMessage PostDoctor(Doctor doctor)
+        public HttpResponseMessage PostDoctor(DoctorREST doctorREST)
         {
-            if (doctor == null)
+            List<DoctorREST> doctorsREST = new List<DoctorREST> { doctorREST };
+            List<Doctor> doctors = MapToDomain(doctorsREST);
+            if (doctorService.Create(doctors))
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.OK, "Inserted successfully!");
             }
-            doctors.Add(doctor);
-            return Request.CreateResponse(HttpStatusCode.OK);
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong.");
+            }
         }
-
+        
         // DELETE: api/Doctors/5
         [HttpDelete]
         public HttpResponseMessage DeleteDoctor(Guid id)
         {
-            if (!DoctorExists(id))
+            if (doctorService.Delete(id))
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.OK, "Deleted successfully!");
             }
             else
             {
-                doctors.Remove(doctors.First(i => i.Id == id));
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong.");
             }
-        }
-       
-        private bool DoctorExists(Guid id)
+        }   
+        
+        private List<Doctor> MapToDomain(List<DoctorREST> doctorsRest)
         {
-            try
+            List<Doctor> doctors = new List<Doctor>();
+            if (doctorsRest.Count > 0)
             {
-                if (doctors.First(i => i.Id == id) != null)
-                {
-                    return true;
+                foreach (DoctorREST docREST in doctorsRest)
+                {                    
+                    Doctor doc = doctorService.GetByID((Guid)docREST.Id);
+                    string UPIN = doctorService.GetByID(docREST.Id.Value).UPIN;
+                    Doctor doctor = new Doctor(docREST.Id.Value, docREST.FirstName, docREST.LastName, UPIN, docREST.AmbulanceAddress);
+                    doctors.Add(doctor);
                 }
-            }
-            catch (Exception e)
+                return doctors;
+            } 
+            else
             {
-                return false;
-                throw (e);
+                return null;
             }
-            return false;
         }
 
-        private Doctor ReadSingleRow(IDataRecord dataRecord)
-        { 
-            Doctor doctor = new Doctor(
-                (Guid)(dataRecord[0]), 
-                Convert.ToString(dataRecord[1]), 
-                Convert.ToString(dataRecord[2]), 
-                Convert.ToString(dataRecord[3]), 
-                Convert.ToString(dataRecord[4])
-            );
-            return doctor;
-        }        
+        private List<DoctorREST> MapToREST(List<Doctor> doctors)
+        {
+            List<DoctorREST> doctorsREST = new List<DoctorREST>();
+            if (doctors.Count > 0)
+            {
+                foreach (Doctor doc in doctors)
+                {              
+                    DoctorREST doctor = new DoctorREST((Guid)doc.Id, doc.FirstName, doc.LastName, doc.AmbulanceAddress);
+                    doctorsREST.Add(doctor);
+                }
+                return doctorsREST;
+            }
+            else
+            {
+                return null;
+            }
+        }
         
     }
 }
