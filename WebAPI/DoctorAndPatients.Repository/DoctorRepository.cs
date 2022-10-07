@@ -162,6 +162,7 @@ namespace DoctorAndPatients.Repository
             {
                 if (await GetByIDAsync(id) != null)
                 {
+                    doctor = await checkEmptyEntriesAsync(id, doctor); //TO AVOID - if user just enterd first name, other properties will become empty
                     string update = @"update doctor set firstName = @firstname, lastName = @lastName, UPIN = @UPIN, 
                             ambulanceAddress = @ambulanceAddress where id = @id";
                     //MySqlDataAdapter adapter = new MySqlDataAdapter(); NOT WORKING
@@ -188,6 +189,15 @@ namespace DoctorAndPatients.Repository
                 return false;
                 throw ex;
             }
+        }
+
+        private async Task<Doctor> checkEmptyEntriesAsync(Guid id, Doctor doctor)
+        {
+            Doctor doctorDB = await GetByIDAsync(id);
+            doctor.FirstName = doctor.FirstName == null ? doctorDB.FirstName : doctor.FirstName;
+            doctor.LastName = doctor.LastName == null ? doctorDB.LastName : doctor.LastName;
+            doctor.AmbulanceAddress = doctor.AmbulanceAddress == null ? doctorDB.AmbulanceAddress : doctor.AmbulanceAddress;
+            return doctor;
         }
 
         private Doctor MapToObject(IDataRecord dataRecord)

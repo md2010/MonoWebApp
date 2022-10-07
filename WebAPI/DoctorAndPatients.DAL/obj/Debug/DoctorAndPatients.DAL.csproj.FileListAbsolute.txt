@@ -14,6 +14,7 @@ C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\bin
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\obj\Debug\DoctorAndPatients.DAL.csproj.AssemblyReference.cache
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\obj\Debug\DoctorAndPatients.DAL.csproj.CoreCompileInputs.cache
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\obj\Debug\DoctorAndPatients.DAL.csproj.CopyComplete
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.DAL\obj\Debug\DoctorAndPatients.DAL.dll

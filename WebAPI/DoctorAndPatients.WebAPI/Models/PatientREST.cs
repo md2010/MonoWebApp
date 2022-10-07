@@ -21,7 +21,7 @@ namespace DoctorAndPatients.WebAPI.Models
 
         public PatientREST(Guid id, string firstName, string lastName, int hsNumber, string diagnosis, Guid doctorId)
         {
-            this.Id = Guid.NewGuid();
+            this.Id = id;
             this.FirstName = firstName;
             this.LastName = lastName;
             this.HealthInsuranceID = hsNumber;

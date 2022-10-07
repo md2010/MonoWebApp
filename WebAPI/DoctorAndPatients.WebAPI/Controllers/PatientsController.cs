@@ -44,11 +44,12 @@ namespace DoctorAndPatients.WebAPI.Controllers
             if (id == null)
             {
                 return Request.CreateResponse(HttpStatusCode.NoContent, "Empty ID.");
-            }
-            List<Patient> patients = new List<Patient> { await patientService.GetByIDAsync(id) };           
+            }          
 
-            if (patients.Any()) 
+            Patient patient = null;
+            if ( (patient = await patientService.GetByIDAsync(id)) != null ) 
             {
+                List<Patient> patients = new List<Patient> { patient };
                 List<PatientREST> patientsREST = MapToREST(patients);
                 return Request.CreateResponse(HttpStatusCode.OK, patientsREST[0]);
             }
@@ -125,7 +126,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
             {
                 foreach (PatientREST pREST in patientsRest)
                 {
-                    Patient patient = new Patient((Guid)pREST.Id, pREST.FirstName, pREST.LastName, pREST.HealthInsuranceID, pREST.Diagnosis, pREST.DoctorId);
+                    Patient patient = new Patient(pREST.Id.Value, pREST.FirstName, pREST.LastName, pREST.HealthInsuranceID, pREST.Diagnosis, pREST.DoctorId);
                     patients.Add(patient);
                 }
                 return patients;
@@ -143,7 +144,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
             {
                 foreach (Patient p in patients)
                 {
-                    PatientREST patient = new PatientREST(p.Id.Value, p.FirstName, p.LastName, p.HealthInsuranceID, p.Diagnosis, p.DoctorId);
+                    PatientREST patient = new PatientREST((Guid)p.Id, p.FirstName, p.LastName, p.HealthInsuranceID, p.Diagnosis, p.DoctorId);
                     patientsREST.Add(patient);
                 }
                 return patientsREST;

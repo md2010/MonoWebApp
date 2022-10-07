@@ -113,7 +113,7 @@ namespace DoctorAndPatients.Repository
                 selectCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
                 conn.Open();
 
-                var reader = await selectCmd.ExecuteReaderAsync();
+                MySqlDataReader reader = selectCmd.ExecuteReader();
                 if (!reader.HasRows)
                 {
                     return null;
@@ -140,10 +140,11 @@ namespace DoctorAndPatients.Repository
             PrepareForConnection();
             try
             {
+                patient = await checkEmptyEntriesAsync(id, patient);
                 string update = @"update patient set id = @id, firstName = @firstname, lastName = @lastName, healthInsuranceID = @healthInsuranceID, 
                         diagnosis = @diagnosis, doctorId = @doctorId where id = @id);";
                 MySqlCommand updateCmd = new MySqlCommand(update, conn);
-                updateCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = patient.Id;
+                updateCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
                 updateCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = patient.FirstName;
                 updateCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = patient.LastName;
                 updateCmd.Parameters.Add("@healthInsuranceID", MySqlDbType.Int32, 6, "healthInsuranceID").Value = patient.HealthInsuranceID;
@@ -161,6 +162,17 @@ namespace DoctorAndPatients.Repository
                 return false;
                 throw ex;
             }
+        }
+
+        private async Task<Patient> checkEmptyEntriesAsync(Guid id, Patient patient)
+        {
+            Patient patientDB = await GetByIDAsync(id);
+            patient.FirstName = patient.FirstName == null ? patientDB.FirstName : patient.FirstName;
+            patient.LastName = patient.LastName == null ? patientDB.LastName : patient.LastName;
+            patient.HealthInsuranceID = patient.HealthInsuranceID == null ? patientDB.HealthInsuranceID : patient.HealthInsuranceID;
+            patient.Diagnosis = patient.Diagnosis == null ? patientDB.Diagnosis : patient.Diagnosis;
+            patient.DoctorId = patient.DoctorId == null ? patientDB.DoctorId : patient.DoctorId;
+            return patient;
         }
 
         private Patient MapToObject(IDataRecord dataRecord)
