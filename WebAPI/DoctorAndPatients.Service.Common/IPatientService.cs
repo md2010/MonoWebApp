@@ -9,10 +9,10 @@ namespace DoctorAndPatients.Service.Common
 {
     public interface IPatientService
     {
-        Patient GetByID(Guid id);
-        List<Patient> GetAll();
-        bool Update(Guid id, List<Patient> patients);
-        bool Create(List<Patient> patients);
-        bool Delete(Guid id);
+        Task<Patient> GetByIDAsync(Guid id);
+        Task<List<Patient>> GetAllAsync();
+        Task<bool> UpdateAsync(Guid id, List<Patient> patients);
+        Task<bool> CreateAsync(List<Patient> patients);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

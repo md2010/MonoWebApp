@@ -12,34 +12,47 @@ namespace DoctorAndPatients.Service
     public class PatientService : IPatientService
     {
         private PatientRepository patientRepository = new PatientRepository();
-        public bool Create(List<Patient> patients)
+        public async Task<bool> CreateAsync(List<Patient> patients)
         {
             patients[0].Id = Guid.NewGuid();
-            return patientRepository.Create(patients[0]);
+            return await patientRepository.CreateAsync(patients[0]);
         }
 
-        public bool Delete(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            return patientRepository.Delete(id);
+            if (await GetByIDAsync(id) != null)
+            {
+                return await patientRepository.DeleteAsync(id);
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public List<Patient> GetAll()
+        public async Task<List<Patient>> GetAllAsync()
         {
             List<Patient> patients = new List<Patient>();
-            patients = patientRepository.GetAll();
+            patients = await patientRepository.GetAllAsync();
             return patients ?? null;
         }
 
-        public Patient GetByID(Guid id)
+        public async Task<Patient> GetByIDAsync(Guid id)
         {
-
-            Patient patient = patientRepository.GetByID(id);
+            Patient patient = await patientRepository.GetByIDAsync(id);
             return patient ?? null;
         }
 
-        public bool Update(Guid id, List<Patient> patients)
+        public async Task<bool> UpdateAsync(Guid id, List<Patient> patients)
         {
-            return patientRepository.Update(id, patients[0]) ? true : false;
+            if ( (patients[0] = await GetByIDAsync(id)) != null)
+            {
+                return await patientRepository.UpdateAsync(id, patients[0]);
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

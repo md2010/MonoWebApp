@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DoctorAndPatients.Model;
@@ -21,13 +22,13 @@ namespace DoctorAndPatients.WebAPI.Controllers
 
         // GET: api/Patients
         [HttpGet]
-        public HttpResponseMessage GetPatients()
+        public async Task<HttpResponseMessage> GetPatientsAsync()
         {
-            List<Patient> patients = patientService.GetAll();
-            List<PatientREST> patientsREST = MapToREST(patients);
+            List<Patient> patients = await patientService.GetAllAsync();            
 
-            if (patientsREST != null)
+            if (patients.Any())
             {
+                List<PatientREST> patientsREST = MapToREST(patients);
                 return Request.CreateResponse(HttpStatusCode.OK, patientsREST);
             }
             else
@@ -38,30 +39,37 @@ namespace DoctorAndPatients.WebAPI.Controllers
 
         // GET: api/Patients/5
         [HttpGet]
-        public HttpResponseMessage GetPatient(Guid id)
+        public async Task<HttpResponseMessage> GetPatientAsync(Guid id)
         {
-            List<Patient> patients = new List<Patient> { patientService.GetByID(id) };
-            List<PatientREST> patientsREST = MapToREST(patients);
-
-            if (patientsREST[0] != null)
+            if (id == null)
             {
+                return Request.CreateResponse(HttpStatusCode.NoContent, "Empty ID.");
+            }
+            List<Patient> patients = new List<Patient> { await patientService.GetByIDAsync(id) };           
+
+            if (patients.Any()) 
+            {
+                List<PatientREST> patientsREST = MapToREST(patients);
                 return Request.CreateResponse(HttpStatusCode.OK, patientsREST[0]);
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.NoContent, "Patient with that ID doesn't exist.");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Patient with that ID doesn't exist.");
             }
         }
 
         // PUT: api/Patients/5
         [HttpPut]
-        public HttpResponseMessage PutPatient(Guid id, PatientREST patientREST)
+        public async Task<HttpResponseMessage> PutPatientAsync(Guid id, PatientREST patientREST)
         {
-            patientREST.Id = id;
+            if (patientREST == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Empty entry.");
+            }
             List<PatientREST> patientsREST = new List<PatientREST> { patientREST };
             List<Patient> patients = MapToDomain(patientsREST);
 
-            if (patientService.Update(id, patients))
+            if (await patientService.UpdateAsync(id, patients))
             {
                 return Request.CreateResponse(HttpStatusCode.OK, "Updated successfully!");
             }
@@ -73,12 +81,16 @@ namespace DoctorAndPatients.WebAPI.Controllers
 
         // POST: api/Patients
         [HttpPost]
-        public HttpResponseMessage PostPatient(PatientREST patientREST)
+        public async Task<HttpResponseMessage> PostPatientAsync(PatientREST patientREST)
         {
+            if (patientREST == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Empty entry.");
+            }
             List<PatientREST> patientsREST = new List<PatientREST> { patientREST };
             List<Patient> patients = MapToDomain(patientsREST);
 
-            if (patientService.Create(patients))
+            if (await patientService.CreateAsync(patients))
             {
                 return Request.CreateResponse(HttpStatusCode.OK, "Inserted successfully!");
             }
@@ -89,9 +101,13 @@ namespace DoctorAndPatients.WebAPI.Controllers
         }
 
         // DELETE: api/Patients/5
-        public HttpResponseMessage DeletePatient(Guid id)
+        public async Task<HttpResponseMessage> DeletePatientAsync(Guid id)
         {
-            if (patientService.Delete(id))
+            if (id == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NoContent, "Empty ID.");
+            }
+            if (await patientService.DeleteAsync(id))
             {
                 return Request.CreateResponse(HttpStatusCode.OK, "Deleted successfully!");
             }
@@ -105,12 +121,11 @@ namespace DoctorAndPatients.WebAPI.Controllers
         private List<Patient> MapToDomain(List<PatientREST> patientsRest)
         {
             List<Patient> patients = new List<Patient>();
-            if (patientsRest.Count > 0)
+            if (patientsRest.Any())
             {
                 foreach (PatientREST pREST in patientsRest)
                 {
-                    Guid docID = patientService.GetByID(pREST.Id.Value).DoctorId;
-                    Patient patient = new Patient((Guid)pREST.Id, pREST.FirstName, pREST.LastName, pREST.HealthInsuranceID, pREST.Diagnosis, docID);
+                    Patient patient = new Patient((Guid)pREST.Id, pREST.FirstName, pREST.LastName, pREST.HealthInsuranceID, pREST.Diagnosis, pREST.DoctorId);
                     patients.Add(patient);
                 }
                 return patients;
@@ -124,11 +139,11 @@ namespace DoctorAndPatients.WebAPI.Controllers
         private List<PatientREST> MapToREST(List<Patient> patients)
         {
             List<PatientREST> patientsREST = new List<PatientREST>();
-            if (patients.Count > 0)
+            if (patients.Any())
             {
                 foreach (Patient p in patients)
                 {
-                    PatientREST patient = new PatientREST(p.Id.Value, p.FirstName, p.LastName, p.HealthInsuranceID, p.Diagnosis);
+                    PatientREST patient = new PatientREST(p.Id.Value, p.FirstName, p.LastName, p.HealthInsuranceID, p.Diagnosis, p.DoctorId);
                     patientsREST.Add(patient);
                 }
                 return patientsREST;

@@ -12,33 +12,47 @@ namespace DoctorAndPatients.Service
     public class DoctorService : IDoctorService
     {
         private DoctorRepository doctorRepository = new DoctorRepository();
-        public bool Create(List<Doctor> doctors)
+        public async Task<bool> CreateAsync(List<Doctor> doctors)
         {
             doctors[0].Id = Guid.NewGuid();
-            return doctorRepository.Create(doctors[0]);
+            return await doctorRepository.CreateAsync(doctors[0]);
         }
 
-        public bool Delete(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            return doctorRepository.Delete(id);
+            if (await GetByIDAsync(id) != null)
+            {
+                return await doctorRepository.DeleteAsync(id);
+            }
+            else
+            { 
+                return false;
+            }
         }
 
-        public List<Doctor> GetAll()
+        public async Task<List<Doctor>> GetAllAsync()
         {
             List<Doctor> doctors = new List<Doctor>();
-            doctors = doctorRepository.GetAll();
-             return doctors ?? null;
+            doctors = await doctorRepository.GetAllAsync();
+            return doctors ?? null;
         }
 
-        public Doctor GetByID(Guid id)
+        public async Task<Doctor> GetByIDAsync(Guid id)
         {
-            Doctor doctor = doctorRepository.GetByID(id);          
+            Doctor doctor = await doctorRepository.GetByIDAsync(id);          
             return doctor ?? null;                        
         }
 
-        public bool Update(Guid id, List<Doctor> doctors)
+        public async Task<bool> UpdateAsync(Guid id, List<Doctor> doctors)
         {
-            return doctorRepository.Update(id, doctors[0]) ? true : false;
+            if ( (doctors[0] = await GetByIDAsync(id)) != null) //returns Doctor with missing data, by ID          
+            {
+                return await doctorRepository.UpdateAsync(id, doctors[0]);
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace DoctorAndPatients.Repository
 {
@@ -22,7 +23,7 @@ namespace DoctorAndPatients.Repository
             conn = new MySqlConnection();
             conn.ConnectionString = connectionString; 
         }
-        public bool Create(Doctor doctor)
+        public async Task<bool> CreateAsync(Doctor doctor)
         {
             PrepareForConnection();
             try
@@ -36,8 +37,8 @@ namespace DoctorAndPatients.Repository
                 insertCmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 6, "UPIN").Value = doctor.UPIN;
                 insertCmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 20, "ambulanceAddress").Value = doctor.AmbulanceAddress;
 
-                conn.Open();
-                insertCmd.ExecuteNonQuery();
+                await conn.OpenAsync();
+                await insertCmd.ExecuteNonQueryAsync();
                 conn.Close();
                 return true;
             }
@@ -50,18 +51,18 @@ namespace DoctorAndPatients.Repository
 
         }
 
-        public bool Delete(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             PrepareForConnection();
             try
             {
-                if (GetByID(id) != null)
+                if (await GetByIDAsync(id) != null)
                 {
                     string delete = @"delete from doctor where id = @id;";
                     MySqlCommand deleteCmd = new MySqlCommand(delete, conn);
                     deleteCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
 
-                    conn.Open();
+                    await conn.OpenAsync();
                     deleteCmd.ExecuteNonQuery();
                     conn.Close();
                     return true;
@@ -79,19 +80,19 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        public List<Doctor> GetAll()
+        public async Task<List<Doctor>> GetAllAsync()
         {
             PrepareForConnection();
             try
             {
                 MySqlCommand command = new MySqlCommand("SELECT * FROM doctor", conn);
-                conn.Open();
-                MySqlDataReader reader = command.ExecuteReader();
+                await conn.OpenAsync();
+                var reader = await command.ExecuteReaderAsync();
 
                 List<Doctor> list = new List<Doctor>();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    list.Add(ReadSingleRow(reader));
+                    list.Add(MapToObject(reader));
                 }
                 conn.Close();
                 return list;
@@ -105,14 +106,14 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        public Doctor GetByID(Guid id)
+        public async Task<Doctor> GetByIDAsync(Guid id)
         {
             PrepareForConnection();
             try
             {                       
                 MySqlCommand selectCmd = new MySqlCommand("SELECT * FROM doctor WHERE id = @id", conn);
                 selectCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
-                conn.Open();
+                await conn.OpenAsync();
 
                 MySqlDataReader reader = selectCmd.ExecuteReader();
                 if (!reader.HasRows)
@@ -120,9 +121,9 @@ namespace DoctorAndPatients.Repository
                     return null;
                 }             
                 Doctor doctor = null;
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
-                    doctor = ReadSingleRow(reader);
+                    doctor = MapToObject(reader);
                 }
 
                 conn.Close();
@@ -154,12 +155,12 @@ namespace DoctorAndPatients.Repository
             }
         }*/
 
-        public bool Update(Guid id, Doctor doctor)
+        public async Task<bool> UpdateAsync(Guid id, Doctor doctor)
         {
             PrepareForConnection();
             try
             {
-                if (GetByID(id) != null)
+                if (await GetByIDAsync(id) != null)
                 {
                     string update = @"update doctor set firstName = @firstname, lastName = @lastName, UPIN = @UPIN, 
                             ambulanceAddress = @ambulanceAddress where id = @id";
@@ -171,7 +172,7 @@ namespace DoctorAndPatients.Repository
                     updateCmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 6, "UPIN").Value = doctor.UPIN;
                     updateCmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 20, "ambulanceAddress").Value = doctor.AmbulanceAddress;
 
-                    conn.Open();
+                    await conn.OpenAsync();
                     updateCmd.ExecuteNonQuery();
                     conn.Close();
                     return true;
@@ -189,7 +190,7 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        private Doctor ReadSingleRow(IDataRecord dataRecord)
+        private Doctor MapToObject(IDataRecord dataRecord)
         {
             Doctor doctor = new Doctor(
                 (Guid)(dataRecord[0]),

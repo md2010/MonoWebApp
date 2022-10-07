@@ -9,10 +9,10 @@ namespace DoctorAndPatients.RepositoryCommon
 {
     public interface IPatientRepository
     {
-        Patient GetByID(Guid id);
-        List<Patient> GetAll();
-        bool Update(Guid id, Patient patient);
-        bool Create(Patient patient);
-        bool Delete(Guid id);
+        Task<Patient> GetByIDAsync(Guid id);
+        Task<List<Patient>> GetAllAsync();
+        Task<bool> UpdateAsync(Guid id, Patient patient);
+        Task<bool> CreateAsync(Patient patient);
+        Task<bool> DeleteAsync(Guid id);
     }
 }
