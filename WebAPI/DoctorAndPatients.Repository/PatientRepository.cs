@@ -36,7 +36,7 @@ namespace DoctorAndPatients.Repository
                 insertCmd.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = patient.Diagnosis;
                 insertCmd.Parameters.Add("@doctorId", MySqlDbType.VarChar, 36, "doctorId").Value = patient.DoctorId;
 
-                await conn.OpenAsync();
+                conn.Open();
                 await insertCmd.ExecuteNonQueryAsync();
                 conn.Close();
                 return true;
@@ -60,7 +60,7 @@ namespace DoctorAndPatients.Repository
                     MySqlCommand deleteCmd = new MySqlCommand(delete, conn);
                     deleteCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
 
-                    await conn.OpenAsync();
+                    conn.Open();
                     await deleteCmd.ExecuteNonQueryAsync();
                     conn.Close();
                     return true;
@@ -84,7 +84,7 @@ namespace DoctorAndPatients.Repository
             try
             {
                 MySqlCommand command = new MySqlCommand("SELECT * FROM patient", conn);
-                await conn.OpenAsync();
+                conn.Open();
                 var reader = await command.ExecuteReaderAsync();
 
                 List<Patient> list = new List<Patient>();
@@ -111,7 +111,7 @@ namespace DoctorAndPatients.Repository
             {
                 MySqlCommand selectCmd = new MySqlCommand("SELECT * FROM patient WHERE id = @id", conn);
                 selectCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
-                await conn.OpenAsync();
+                conn.Open();
 
                 var reader = await selectCmd.ExecuteReaderAsync();
                 if (!reader.HasRows)
@@ -150,7 +150,7 @@ namespace DoctorAndPatients.Repository
                 updateCmd.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = patient.Diagnosis;
                 updateCmd.Parameters.Add("@doctorId", MySqlDbType.VarChar, 36, "doctorId").Value = patient.DoctorId;
 
-                await conn.OpenAsync();
+                conn.Open();
                 await updateCmd.ExecuteNonQueryAsync();
                 conn.Close();
                 return true;

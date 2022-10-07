@@ -37,7 +37,7 @@ namespace DoctorAndPatients.Repository
                 insertCmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 6, "UPIN").Value = doctor.UPIN;
                 insertCmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 20, "ambulanceAddress").Value = doctor.AmbulanceAddress;
 
-                await conn.OpenAsync();
+                conn.Open();
                 await insertCmd.ExecuteNonQueryAsync();
                 conn.Close();
                 return true;
@@ -62,7 +62,7 @@ namespace DoctorAndPatients.Repository
                     MySqlCommand deleteCmd = new MySqlCommand(delete, conn);
                     deleteCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
 
-                    await conn.OpenAsync();
+                    conn.Open();
                     deleteCmd.ExecuteNonQuery();
                     conn.Close();
                     return true;
@@ -86,7 +86,7 @@ namespace DoctorAndPatients.Repository
             try
             {
                 MySqlCommand command = new MySqlCommand("SELECT * FROM doctor", conn);
-                await conn.OpenAsync();
+                conn.Open();
                 var reader = await command.ExecuteReaderAsync();
 
                 List<Doctor> list = new List<Doctor>();
@@ -113,7 +113,7 @@ namespace DoctorAndPatients.Repository
             {                       
                 MySqlCommand selectCmd = new MySqlCommand("SELECT * FROM doctor WHERE id = @id", conn);
                 selectCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
-                await conn.OpenAsync();
+                conn.Open();
 
                 MySqlDataReader reader = selectCmd.ExecuteReader();
                 if (!reader.HasRows)
@@ -172,7 +172,7 @@ namespace DoctorAndPatients.Repository
                     updateCmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 6, "UPIN").Value = doctor.UPIN;
                     updateCmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 20, "ambulanceAddress").Value = doctor.AmbulanceAddress;
 
-                    await conn.OpenAsync();
+                    conn.Open();
                     updateCmd.ExecuteNonQuery();
                     conn.Close();
                     return true;
