@@ -23,8 +23,12 @@ namespace DoctorAndPatients.Service
             foreach (Patient patient in patients)
             {
                 patient.Id = Guid.NewGuid();
+                if(! await patientRepository.CreateAsync(patient))
+                {
+                    return false;
+                }
             }
-            return await patientRepository.CreateAsync(patients);
+            return true;
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -52,16 +56,13 @@ namespace DoctorAndPatients.Service
             return patient ?? null;
         }
 
-        public async Task<bool> UpdateAsync(Guid id, List<Patient> patients)
-        {
-            foreach (Patient patient in patients)
+        public async Task<bool> UpdateAsync(Guid id, Patient patient)
+        {          
+            if ((await GetByIDAsync(id)) != null)
             {
-                if ((await GetByIDAsync(id)) == null)
-                {
-                    return false;
-                }
-            }           
-             return await patientRepository.UpdateAsync(id, patients);           
+                return await patientRepository.UpdateAsync(id, patient);
+            }                                     
+            return false;           
         }
 
     }

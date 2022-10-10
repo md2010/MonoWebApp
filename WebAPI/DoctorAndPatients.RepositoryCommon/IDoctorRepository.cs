@@ -11,8 +11,8 @@ namespace DoctorAndPatients.RepositoryCommon
     {
         Task<Doctor> GetByIDAsync(Guid id);
         Task<List<Doctor>> GetAllAsync();
-        Task<bool> UpdateAsync(Guid id, List<Doctor> doctors);
-        Task<bool> CreateAsync(List<Doctor> doctors);
+        Task<bool> UpdateAsync(Guid id, Doctor doctor);
+        Task<bool> CreateAsync(Doctor doctors);
         Task<bool> DeleteAsync(Guid id);
     }
 }

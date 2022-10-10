@@ -76,7 +76,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
             List<PatientREST> patientsREST = new List<PatientREST> { patientREST };
             List<Patient> patients = MapToDomain(patientsREST);
 
-            if (await patientService.UpdateAsync(id, patients))
+            if (await patientService.UpdateAsync(id, patients.First()))
             {
                 return Request.CreateResponse(HttpStatusCode.OK, "Updated successfully!");
             }

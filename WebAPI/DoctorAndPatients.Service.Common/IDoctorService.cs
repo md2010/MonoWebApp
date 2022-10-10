@@ -11,7 +11,7 @@ namespace DoctorAndPatients.Service.Common
     {
         Task<Doctor> GetByIDAsync(Guid id);
         Task<List<Doctor>> GetAllAsync();
-        Task<bool> UpdateAsync(Guid id, List<Doctor> doctors);
+        Task<bool> UpdateAsync(Guid id, Doctor doctor);
         Task<bool> CreateAsync(List<Doctor> doctor);
         Task<bool> DeleteAsync(Guid id);
 
