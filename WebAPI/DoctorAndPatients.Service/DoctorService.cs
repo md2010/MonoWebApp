@@ -1,5 +1,6 @@
 ﻿using DoctorAndPatients.Model;
 using DoctorAndPatients.Repository;
+using DoctorAndPatients.RepositoryCommon;
 using DoctorAndPatients.Service.Common;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,19 @@ namespace DoctorAndPatients.Service
 {
     public class DoctorService : IDoctorService
     {
-        private DoctorRepository doctorRepository = new DoctorRepository();
+        private IDoctorRepository doctorRepository;
+
+        public DoctorService(IDoctorRepository doctorRepo)
+        {
+            this.doctorRepository = doctorRepo;
+        }
         public async Task<bool> CreateAsync(List<Doctor> doctors)
         {
-            doctors[0].Id = Guid.NewGuid();
-            return await doctorRepository.CreateAsync(doctors[0]);
+            foreach (Doctor doctor in doctors)
+            {
+                doctor.Id = Guid.NewGuid();
+            }
+            return await doctorRepository.CreateAsync(doctors);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -45,14 +54,14 @@ namespace DoctorAndPatients.Service
 
         public async Task<bool> UpdateAsync(Guid id, List<Doctor> doctors)
         {
-            if ( (doctors[0] = await GetByIDAsync(id)) != null) //returns Doctor with missing data, by ID          
+            foreach (Doctor doctor in doctors)
             {
-                return await doctorRepository.UpdateAsync(id, doctors[0]);
+                if ((await GetByIDAsync(id)) == null)
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return await doctorRepository.UpdateAsync(id, doctors);
         }
     }
 }

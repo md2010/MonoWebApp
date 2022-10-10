@@ -13,12 +13,18 @@ using DoctorAndPatients.Model;
 using DoctorAndPatients.Service;
 using DoctorAndPatients.WebAPI.Models;
 using System.Threading.Tasks;
+using DoctorAndPatients.Service.Common;
 
 namespace DoctorAndPatients.WebAPI.Controllers
 {
     public class DoctorsController : ApiController
     {
-        private DoctorService doctorService = new DoctorService();
+        private IDoctorService doctorService;
+
+        public DoctorsController(IDoctorService doctorService)
+        {
+            this.doctorService = doctorService;
+        }
       
         // GET: api/Doctors
         [HttpGet]
@@ -43,7 +49,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
         {
             if(id == null)
             {
-                return Request.CreateResponse(HttpStatusCode.NoContent, "Empty ID.");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Empty ID.");
             }
 
             Doctor doc = null;
@@ -51,7 +57,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
             { 
                 List<Doctor> doctors = new List<Doctor> { doc };            
                 List<DoctorREST> doctorsREST = MapToREST(doctors);
-                return Request.CreateResponse(HttpStatusCode.OK, doctorsREST[0]);
+                return Request.CreateResponse(HttpStatusCode.OK, doctorsREST.First());
             }
             else
             {

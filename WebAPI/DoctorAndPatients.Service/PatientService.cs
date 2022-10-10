@@ -1,5 +1,6 @@
 ﻿using DoctorAndPatients.Model;
 using DoctorAndPatients.Repository;
+using DoctorAndPatients.RepositoryCommon;
 using DoctorAndPatients.Service.Common;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,19 @@ namespace DoctorAndPatients.Service
 {
     public class PatientService : IPatientService
     {
-        private PatientRepository patientRepository = new PatientRepository();
+        private IPatientRepository patientRepository;
+
+        public PatientService(IPatientRepository patientRepo)
+        {
+            this.patientRepository = patientRepo;
+        }
         public async Task<bool> CreateAsync(List<Patient> patients)
         {
-            patients[0].Id = Guid.NewGuid();
-            return await patientRepository.CreateAsync(patients[0]);
+            foreach (Patient patient in patients)
+            {
+                patient.Id = Guid.NewGuid();
+            }
+            return await patientRepository.CreateAsync(patients);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -45,14 +54,15 @@ namespace DoctorAndPatients.Service
 
         public async Task<bool> UpdateAsync(Guid id, List<Patient> patients)
         {
-            if ( (patients[0] = await GetByIDAsync(id)) != null)
+            foreach (Patient patient in patients)
             {
-                return await patientRepository.UpdateAsync(id, patients[0]);
-            }
-            else
-            {
-                return false;
-            }
+                if ((await GetByIDAsync(id)) == null)
+                {
+                    return false;
+                }
+            }           
+             return await patientRepository.UpdateAsync(id, patients);           
         }
+
     }
 }

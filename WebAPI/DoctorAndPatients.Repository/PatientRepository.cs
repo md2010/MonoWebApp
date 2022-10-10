@@ -22,22 +22,25 @@ namespace DoctorAndPatients.Repository
             conn = new MySqlConnection();
             conn.ConnectionString = connectionString;
         }
-        public async Task<bool> CreateAsync(Patient patient)
+        public async Task<bool> CreateAsync(List<Patient> patients)
         {
             PrepareForConnection();
             try
             {
-                string insert = @"insert into patient values (@id, @firstname, @lastName, @healthInsuranceID, @diagnosis, @doctorId);";
-                MySqlCommand insertCmd = new MySqlCommand(insert, conn);
-                insertCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = patient.Id;
-                insertCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = patient.FirstName;
-                insertCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = patient.LastName;
-                insertCmd.Parameters.Add("@healthInsuranceID", MySqlDbType.Int32, 6, "healthInsuranceID").Value = patient.HealthInsuranceID;
-                insertCmd.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = patient.Diagnosis;
-                insertCmd.Parameters.Add("@doctorId", MySqlDbType.VarChar, 36, "doctorId").Value = patient.DoctorId;
-
                 conn.Open();
-                await insertCmd.ExecuteNonQueryAsync();
+                foreach (Patient patient in patients)
+                {
+                    string insert = @"insert into patient values (@id, @firstname, @lastName, @healthInsuranceID, @diagnosis, @doctorId);";
+                    MySqlCommand insertCmd = new MySqlCommand(insert, conn);
+                    insertCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = patient.Id;
+                    insertCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = patient.FirstName;
+                    insertCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = patient.LastName;
+                    insertCmd.Parameters.Add("@healthInsuranceID", MySqlDbType.Int32, 6, "healthInsuranceID").Value = patient.HealthInsuranceID;
+                    insertCmd.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = patient.Diagnosis;
+                    insertCmd.Parameters.Add("@doctorId", MySqlDbType.VarChar, 36, "doctorId").Value = patient.DoctorId;
+                 
+                    await insertCmd.ExecuteNonQueryAsync();
+                }
                 conn.Close();
                 return true;
             }
@@ -135,24 +138,27 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        public async Task<bool> UpdateAsync(Guid id, Patient patient)
+        public async Task<bool> UpdateAsync(Guid id, List<Patient> patients)
         {
             PrepareForConnection();
             try
             {
-                patient = await checkEmptyEntriesAsync(id, patient);
-                string update = @"update patient set id = @id, firstName = @firstname, lastName = @lastName, healthInsuranceID = @healthInsuranceID, 
-                        diagnosis = @diagnosis, doctorId = @doctorId where id = @id);";
-                MySqlCommand updateCmd = new MySqlCommand(update, conn);
-                updateCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
-                updateCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = patient.FirstName;
-                updateCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = patient.LastName;
-                updateCmd.Parameters.Add("@healthInsuranceID", MySqlDbType.Int32, 6, "healthInsuranceID").Value = patient.HealthInsuranceID;
-                updateCmd.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = patient.Diagnosis;
-                updateCmd.Parameters.Add("@doctorId", MySqlDbType.VarChar, 36, "doctorId").Value = patient.DoctorId;
-
                 conn.Open();
-                await updateCmd.ExecuteNonQueryAsync();
+                foreach (Patient p in patients)
+                {
+                    Patient patient = await CheckEmptyEntriesAsync(id, p);
+                    string update = @"update patient set id = @id, firstName = @firstname, lastName = @lastName, healthInsuranceID = @healthInsuranceID, 
+                        diagnosis = @diagnosis, doctorId = @doctorId where id = @id);";
+                    MySqlCommand updateCmd = new MySqlCommand(update, conn);
+                    updateCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
+                    updateCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = patient.FirstName;
+                    updateCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = patient.LastName;
+                    updateCmd.Parameters.Add("@healthInsuranceID", MySqlDbType.Int32, 6, "healthInsuranceID").Value = patient.HealthInsuranceID;
+                    updateCmd.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = patient.Diagnosis;
+                    updateCmd.Parameters.Add("@doctorId", MySqlDbType.VarChar, 36, "doctorId").Value = patient.DoctorId;
+
+                    await updateCmd.ExecuteNonQueryAsync();
+                }
                 conn.Close();
                 return true;
             }
@@ -164,7 +170,7 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        private async Task<Patient> checkEmptyEntriesAsync(Guid id, Patient patient)
+        private async Task<Patient> CheckEmptyEntriesAsync(Guid id, Patient patient)
         {
             Patient patientDB = await GetByIDAsync(id);
             patient.FirstName = patient.FirstName == null ? patientDB.FirstName : patient.FirstName;

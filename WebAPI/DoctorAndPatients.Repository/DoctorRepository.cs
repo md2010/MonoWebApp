@@ -16,29 +16,32 @@ namespace DoctorAndPatients.Repository
     {
         private static readonly string connectionString = 
             ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-        private MySqlConnection conn;
+        private MySqlConnection conn;        
 
         private void PrepareForConnection()
         {
             conn = new MySqlConnection();
             conn.ConnectionString = connectionString; 
         }
-        public async Task<bool> CreateAsync(Doctor doctor)
+        public async Task<bool> CreateAsync(List<Doctor> doctors)
         {
             PrepareForConnection();
             try
             {
-                string insert = @"insert into doctor values (@id, @firstname, @lastName, @UPIN, @ambulanceAddress);";
-                //MySqlDataAdapter adapter = new MySqlDataAdapter(); NOT WORKING
-                MySqlCommand insertCmd = new MySqlCommand(insert, conn);
-                insertCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = doctor.Id;
-                insertCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = doctor.FirstName;
-                insertCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = doctor.LastName;
-                insertCmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 6, "UPIN").Value = doctor.UPIN;
-                insertCmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 20, "ambulanceAddress").Value = doctor.AmbulanceAddress;
-
                 conn.Open();
-                await insertCmd.ExecuteNonQueryAsync();
+                foreach (Doctor doctor in doctors)
+                {
+                    string insert = @"insert into doctor values (@id, @firstname, @lastName, @UPIN, @ambulanceAddress);";
+                    //MySqlDataAdapter adapter = new MySqlDataAdapter(); NOT WORKING
+                    MySqlCommand insertCmd = new MySqlCommand(insert, conn);
+                    insertCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = doctor.Id;
+                    insertCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = doctor.FirstName;
+                    insertCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = doctor.LastName;
+                    insertCmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 6, "UPIN").Value = doctor.UPIN;
+                    insertCmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 20, "ambulanceAddress").Value = doctor.AmbulanceAddress;
+                  
+                    await insertCmd.ExecuteNonQueryAsync();
+                }
                 conn.Close();
                 return true;
             }
@@ -155,34 +158,29 @@ namespace DoctorAndPatients.Repository
             }
         }*/
 
-        public async Task<bool> UpdateAsync(Guid id, Doctor doctor)
+        public async Task<bool> UpdateAsync(Guid id, List<Doctor> doctors)
         {
             PrepareForConnection();
             try
             {
-                if (await GetByIDAsync(id) != null)
-                {
-                    doctor = await checkEmptyEntriesAsync(id, doctor); //TO AVOID - if user just enterd first name, other properties will become empty
-                    string update = @"update doctor set firstName = @firstname, lastName = @lastName, UPIN = @UPIN, 
-                            ambulanceAddress = @ambulanceAddress where id = @id";
-                    //MySqlDataAdapter adapter = new MySqlDataAdapter(); NOT WORKING
-                    MySqlCommand updateCmd = new MySqlCommand(update, conn);
-                    updateCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
-                    updateCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = doctor.FirstName;
-                    updateCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = doctor.LastName;
-                    updateCmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 6, "UPIN").Value = doctor.UPIN;
-                    updateCmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 20, "ambulanceAddress").Value = doctor.AmbulanceAddress;
+            conn.Open();
+            foreach(Doctor d in doctors)
+            {                   
+                Doctor doctor = await CheckEmptyEntriesAsync(id, d); //TO AVOID - if user just enterd first name, other properties will become empty
+                string update = @"update doctor set firstName = @firstname, lastName = @lastName, UPIN = @UPIN, 
+                    ambulanceAddress = @ambulanceAddress where id = @id";
+                MySqlCommand updateCmd = new MySqlCommand(update, conn);
+                updateCmd.Parameters.Add("@id", MySqlDbType.VarChar, 36, "id").Value = id;
+                updateCmd.Parameters.Add("@firstName", MySqlDbType.VarChar, 30, "firstName").Value = doctor.FirstName;
+                updateCmd.Parameters.Add("@lastName", MySqlDbType.VarChar, 50, "lastName").Value = doctor.LastName;
+                updateCmd.Parameters.Add("@UPIN", MySqlDbType.VarChar, 6, "UPIN").Value = doctor.UPIN;
+                updateCmd.Parameters.Add("@ambulanceAddress", MySqlDbType.VarChar, 20, "ambulanceAddress").Value = doctor.AmbulanceAddress;
 
-                    conn.Open();
-                    updateCmd.ExecuteNonQuery();
-                    conn.Close();
-                    return true;
+                updateCmd.ExecuteNonQuery();
                 }
-                else //doesn't exist in DB
-                {
-                    return false;
-                }
-            }
+                conn.Close();
+                return true;
+            }                           
             catch (MySqlException ex)
             {
                 conn.Close();
@@ -191,7 +189,7 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        private async Task<Doctor> checkEmptyEntriesAsync(Guid id, Doctor doctor)
+        private async Task<Doctor> CheckEmptyEntriesAsync(Guid id, Doctor doctor)
         {
             Doctor doctorDB = await GetByIDAsync(id);
             doctor.FirstName = doctor.FirstName == null ? doctorDB.FirstName : doctor.FirstName;

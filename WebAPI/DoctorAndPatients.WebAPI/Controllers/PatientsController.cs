@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using DoctorAndPatients.Model;
 using DoctorAndPatients.Service;
+using DoctorAndPatients.Service.Common;
 using DoctorAndPatients.WebAPI.Data;
 using DoctorAndPatients.WebAPI.Models;
 
@@ -18,7 +19,12 @@ namespace DoctorAndPatients.WebAPI.Controllers
 {
     public class PatientsController : ApiController
     {
-        private PatientService patientService = new PatientService();
+        private IPatientService patientService;
+
+        public PatientsController(IPatientService patientService)
+        {
+            this.patientService = patientService;
+        }
 
         // GET: api/Patients
         [HttpGet]
@@ -43,7 +49,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
         {
             if (id == null)
             {
-                return Request.CreateResponse(HttpStatusCode.NoContent, "Empty ID.");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Empty ID.");
             }          
 
             Patient patient = null;
@@ -51,7 +57,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
             {
                 List<Patient> patients = new List<Patient> { patient };
                 List<PatientREST> patientsREST = MapToREST(patients);
-                return Request.CreateResponse(HttpStatusCode.OK, patientsREST[0]);
+                return Request.CreateResponse(HttpStatusCode.OK, patientsREST.First());
             }
             else
             {
@@ -102,6 +108,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
         }
 
         // DELETE: api/Patients/5
+        [HttpDelete]
         public async Task<HttpResponseMessage> DeletePatientAsync(Guid id)
         {
             if (id == null)
