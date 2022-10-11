@@ -30,3 +30,6 @@ C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.C
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\bin\Debug\System.Memory.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\obj\Debug\DoctorAndPatients.Model.Common.csproj.AssemblyReference.cache
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\bin\Debug\AutoMapper.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\bin\Debug\AutoMapper.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model.Common\bin\Debug\AutoMapper.xml

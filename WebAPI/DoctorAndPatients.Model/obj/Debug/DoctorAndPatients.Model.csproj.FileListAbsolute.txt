@@ -33,3 +33,6 @@ C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\b
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\System.Memory.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\AutoMapper.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\AutoMapper.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Model\bin\Debug\AutoMapper.xml

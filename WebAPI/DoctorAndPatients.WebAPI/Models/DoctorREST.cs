@@ -13,12 +13,5 @@ namespace DoctorAndPatients.WebAPI.Models
         public string LastName { get; set; }      
         public string AmbulanceAddress { get; set; }
 
-        public DoctorREST(Guid id, string firstName, string lastName, string address)
-        {
-            this.Id = id;
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.AmbulanceAddress = address;
-        }
     }
 }

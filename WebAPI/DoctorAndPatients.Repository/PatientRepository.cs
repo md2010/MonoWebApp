@@ -1,4 +1,5 @@
-﻿using DoctorAndPatients.Model;
+﻿using DoctorAndPatients.Common;
+using DoctorAndPatients.Model;
 using DoctorAndPatients.RepositoryCommon;
 using MySql.Data.MySqlClient;
 using System;
@@ -71,16 +72,57 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        public async Task<List<Patient>> GetAllAsync()
+        public async Task<List<Patient>> GetAllAsync(Paging paging, Sort sort, 
+            DiagnosisFilter diagnosisFilter, DateOfBirthFilter dateFilter)
         {
             PrepareForConnection();
             try
             {
-                MySqlCommand command = new MySqlCommand("SELECT * FROM patient", conn);
+                //paging, sorting, filtering
+                StringBuilder sb = new StringBuilder();
+                sb.Append("SELECT * FROM patient ");
+
+                if(diagnosisFilter != null)
+                {
+                    sb.Append("WHERE diagnosis = @diagnosis ");
+                }
+                if(dateFilter != default)
+                {
+                    if (diagnosisFilter != null)
+                    {
+                        sb.Append("AND dateOfBirth >= @date ");
+                    } 
+                    else
+                    {
+                        sb.Append("WHERE dateOfBirth >= @date ");
+                    }
+                }
+
+                if(sort.SortOrder == "asc")
+                {
+                    sb.Append("ORDER BY lastName ASC ");
+                }
+                else
+                {
+                    sb.Append("ORDER BY lastName DESC ");
+                }           
+
+                int offset = (paging.PageNumber - 1) * paging.Rpp;
+                sb.Append("LIMIT @rpp OFFSET @offset");
+
+                //DB communication
+                MySqlCommand command = new MySqlCommand(sb.ToString(), conn);
+                command.Parameters.Add("@rpp", MySqlDbType.Int32, 4, "rpp").Value = paging.Rpp;
+                command.Parameters.Add("@offset", MySqlDbType.Int32, 4, "offset").Value = offset;
+                if(diagnosisFilter != null) 
+                    command.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = diagnosisFilter.Diagnosis;
+                if(dateFilter != default)
+                    command.Parameters.Add("@date", MySqlDbType.DateTime).Value = dateFilter.DateOfBirth;
+
                 conn.Open();
                 var reader = await command.ExecuteReaderAsync();
 
-                List<Patient> list = new List<Patient>();
+                List<Patient> list = new List<Patient>();               
                 while (await reader.ReadAsync())
                 {
                     list.Add(MapToObject(reader));
@@ -93,7 +135,7 @@ namespace DoctorAndPatients.Repository
             {
                 conn.Close();
                 return null;
-                throw ex;
+                throw ex;              
             }
         }
 
@@ -111,6 +153,7 @@ namespace DoctorAndPatients.Repository
                 {
                     return null;
                 }
+                
                 Patient patient = null;
                 while (await reader.ReadAsync())
                 {
@@ -177,7 +220,8 @@ namespace DoctorAndPatients.Repository
                 Convert.ToString(dataRecord[2]),
                 Convert.ToInt32(dataRecord[3]),
                 Convert.ToString(dataRecord[4]),
-                (Guid)(dataRecord[5])
+                (Guid)(dataRecord[5]),
+                Convert.ToDateTime(dataRecord[6])
             );
             return patient;
         }

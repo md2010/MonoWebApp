@@ -20,7 +20,10 @@ namespace DoctorAndPatients.Model
         // foreign key - relation one doctor has many patients, patient has one doctor
         public Guid DoctorId { get; set; }
 
-        public Patient(Guid id, string firstName, string lastName, int hsNumber, string diagnosis, Guid doctorId)
+        public DateTime DateOfBirth { get; set; }
+
+        //for method in repo MapToObject
+        public Patient(Guid id, string firstName, string lastName, int hsNumber, string diagnosis, Guid doctorId, DateTime dateOfBirth)
         {
             this.Id = id;
             this.FirstName = firstName;
@@ -28,6 +31,7 @@ namespace DoctorAndPatients.Model
             this.HealthInsuranceID = hsNumber;
             this.Diagnosis = diagnosis;
             this.DoctorId = doctorId;
+            this.DateOfBirth = dateOfBirth;
         }
     }
 }

@@ -16,5 +16,6 @@ namespace DoctorAndPatients.Model.Common
         //6 six-character alpha-numeric identifier used to identify doctors in the US
         string UPIN { get; set; }
         string AmbulanceAddress { get; set; }
+        DateTime CreatedAt { get; set; }
     }
 }

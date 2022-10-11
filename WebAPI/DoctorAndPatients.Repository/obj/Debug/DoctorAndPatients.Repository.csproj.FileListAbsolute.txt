@@ -40,3 +40,8 @@ C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Reposit
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Repository\bin\Debug\System.Memory.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Repository\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Repository\bin\Debug\DoctorAndPatients.Model.Common.dll.config
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Repository\bin\Debug\AutoMapper.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Repository\bin\Debug\AutoMapper.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Repository\bin\Debug\AutoMapper.xml
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Repository\bin\Debug\DoctorAndPatients.Common.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Repository\bin\Debug\DoctorAndPatients.Common.pdb

@@ -46,6 +46,9 @@
     <Reference Include="Autofac, Version=6.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.6.4.0\lib\netstandard2.0\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=8.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.1.1\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -83,6 +86,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DoctorAndPatients.Common\DoctorAndPatients.Common.csproj">
+      <Project>{5CAF153F-8F6F-4FD2-99D4-F8158FB5C3CB}</Project>
+      <Name>DoctorAndPatients.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DoctorAndPatients.Model\DoctorAndPatients.Model.csproj">
       <Project>{9177D848-E6BE-4628-AB5C-B975B281C6EC}</Project>
       <Name>DoctorAndPatients.Model</Name>

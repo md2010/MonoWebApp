@@ -9,6 +9,7 @@ using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using DoctorAndPatients.Common;
 
 namespace DoctorAndPatients.Repository
 {
@@ -71,12 +72,40 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        public async Task<List<Doctor>> GetAllAsync()
+        public async Task<List<Doctor>> FindAsync(Paging paging, Sort sort,
+            AmbulanceAddressFilter filter)
         {
             PrepareForConnection();
             try
             {
-                MySqlCommand command = new MySqlCommand("SELECT * FROM doctor", conn);
+                //paging, sorting, filtering
+                StringBuilder sb = new StringBuilder();
+                sb.Append("SELECT * FROM doctor ");
+                if(filter != null)
+                {
+                    if(filter.AmbulanceAddress != "")
+                        sb.Append("WHERE ambulanceAddress = @address ");
+                }
+                if (sort.SortOrder == "asc")
+                {
+                    sb.Append($"ORDER BY {sort.SortBy} ASC ");
+                }
+                else
+                {
+                    sb.Append($"ORDER BY {sort.SortBy} DESC ");
+                }
+
+                int offset = (paging.PageNumber - 1) * paging.Rpp;
+                sb.Append("LIMIT @rpp OFFSET @offset");
+                
+                //DB communication
+                MySqlCommand command = new MySqlCommand(sb.ToString(), conn);
+                command.Parameters.Add("@rpp", MySqlDbType.Int32, 4, "rpp").Value = paging.Rpp;
+                command.Parameters.Add("@offset", MySqlDbType.Int32, 4, "offset").Value = offset;
+                if (filter.AmbulanceAddress != "")
+                    command.Parameters.Add("@address", MySqlDbType.VarChar, 20, "ambulanceAddress")
+                        .Value = filter.AmbulanceAddress;
+
                 conn.Open();
                 var reader = await command.ExecuteReaderAsync();
 
@@ -174,7 +203,8 @@ namespace DoctorAndPatients.Repository
                 Convert.ToString(dataRecord[1]),
                 Convert.ToString(dataRecord[2]),
                 Convert.ToString(dataRecord[3]),
-                Convert.ToString(dataRecord[4])
+                Convert.ToString(dataRecord[4]),
+                Convert.ToDateTime(dataRecord[5])
             );
             return doctor;
         }

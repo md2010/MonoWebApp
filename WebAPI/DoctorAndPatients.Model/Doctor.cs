@@ -17,14 +17,17 @@ namespace DoctorAndPatients.Model
         //6 six-character alpha-numeric identifier used to identify doctors in the US
         public string UPIN { get; set; }
         public string AmbulanceAddress { get; set; }
+        public DateTime CreatedAt { get; set; }
         
-        public Doctor(Guid id, string firstName, string lastName, string upin, string address)
+        //for method in repo MapToObject
+        public Doctor(Guid id, string firstName, string lastName, string upin, string address, DateTime createdAt)
         {
             this.Id = id;
             this.FirstName = firstName;
             this.LastName = lastName;
             this.UPIN = upin;
             this.AmbulanceAddress = address;
+            this.CreatedAt = createdAt;
         }
     }
 }

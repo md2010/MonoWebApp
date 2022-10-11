@@ -14,27 +14,38 @@ using DoctorAndPatients.Service;
 using DoctorAndPatients.WebAPI.Models;
 using System.Threading.Tasks;
 using DoctorAndPatients.Service.Common;
+using AutoMapper;
+using DoctorAndPatients.Common;
 
 namespace DoctorAndPatients.WebAPI.Controllers
 {
     public class DoctorsController : ApiController
     {
         private IDoctorService doctorService;
+        private IMapper mapper;
 
-        public DoctorsController(IDoctorService doctorService)
+        public DoctorsController(IDoctorService doctorService, IMapper mapper)
         {
             this.doctorService = doctorService;
+            this.mapper = mapper;
         }
       
         // GET: api/Doctors
         [HttpGet]
-        public async Task<HttpResponseMessage> GetDoctorsAsync()
+        public async Task<HttpResponseMessage> FindAsync(int rpp = 0, int pageNumber = 0, 
+            string sortBy = "", string sortOrder="", string ambulanceAddress="")
         {
-            List<Doctor> doctors = await doctorService.GetAllAsync();
+            Paging paging = new Paging(rpp, pageNumber);
+            Sort sort = new Sort(sortBy, sortOrder);
+            AmbulanceAddressFilter ambulanceAddressFilter = new AmbulanceAddressFilter(ambulanceAddress);
+
+            List<Doctor> doctors = await doctorService.FindAsync(paging, sort, ambulanceAddressFilter);
 
             if(doctors.Any())
             {
-                List<DoctorREST> doctorsREST = MapToREST(doctors);
+                List<DoctorREST> doctorsREST = new List<DoctorREST>();
+                doctorsREST = mapper.Map(doctors, doctorsREST);
+
                 return Request.CreateResponse(HttpStatusCode.OK, doctorsREST);
             }
             else
@@ -52,12 +63,13 @@ namespace DoctorAndPatients.WebAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Empty ID.");
             }
 
-            Doctor doc = null;
-            if( (doc = await doctorService.GetByIDAsync(id)) != null)
-            { 
-                List<Doctor> doctors = new List<Doctor> { doc };            
-                List<DoctorREST> doctorsREST = MapToREST(doctors);
-                return Request.CreateResponse(HttpStatusCode.OK, doctorsREST.First());
+            Doctor doctor;
+            if( (doctor = await doctorService.GetByIDAsync(id)) != null)
+            {
+                DoctorREST doctorREST = null;
+                doctorREST = mapper.Map(doctor, doctorREST);
+
+                return Request.CreateResponse(HttpStatusCode.OK, doctorREST);
             }
             else
             {
@@ -72,11 +84,12 @@ namespace DoctorAndPatients.WebAPI.Controllers
             if(doctorREST == null)
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Empty entry.");
-            }
-            List<DoctorREST> doctorsREST = new List<DoctorREST> { doctorREST };           
-            List<Doctor> doctors = MapToDomain(doctorsREST);
+            }        
+            
+            Doctor doctor = null;
+            doctor = mapper.Map(doctorREST, doctor);
 
-            if (await doctorService.UpdateAsync(id, doctors.First()))
+            if (await doctorService.UpdateAsync(id, doctor))
             {
                 return Request.CreateResponse(HttpStatusCode.OK, "Updated successfully!");
             }
@@ -95,9 +108,10 @@ namespace DoctorAndPatients.WebAPI.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Empty entry.");
             }
-            List<DoctorREST> doctorsREST = new List<DoctorREST> { doctorREST };
-            List<Doctor> doctors = MapToDomain(doctorsREST);
-            
+
+            List<Doctor> doctors = new List<Doctor>();
+            doctors = mapper.Map(new List<DoctorREST> { doctorREST }, doctors);
+
             if (await doctorService.CreateAsync(doctors))
             {
                 return Request.CreateResponse(HttpStatusCode.OK, "Inserted successfully!");
@@ -126,7 +140,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
             }
         }   
         
-        private List<Doctor> MapToDomain(List<DoctorREST> doctorsRest)
+        /*private List<Doctor> MapToDomain(List<DoctorREST> doctorsRest)
         {
             List<Doctor> doctors = new List<Doctor>();
             if (doctors.Any())
@@ -160,7 +174,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
             {
                 return null;
             }
-        }
+        } */
         
     }
 }

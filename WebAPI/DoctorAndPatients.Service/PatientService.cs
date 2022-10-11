@@ -1,4 +1,5 @@
-﻿using DoctorAndPatients.Model;
+﻿using DoctorAndPatients.Common;
+using DoctorAndPatients.Model;
 using DoctorAndPatients.Repository;
 using DoctorAndPatients.RepositoryCommon;
 using DoctorAndPatients.Service.Common;
@@ -43,10 +44,11 @@ namespace DoctorAndPatients.Service
             }
         }
 
-        public async Task<List<Patient>> GetAllAsync()
+        public async Task<List<Patient>> GetAllAsync(Paging paging, Sort sort, 
+            DiagnosisFilter diagnosisFilter, DateOfBirthFilter dateFilter)
         {
             List<Patient> patients = new List<Patient>();
-            patients = await patientRepository.GetAllAsync();
+            patients = await patientRepository.GetAllAsync(paging, sort, diagnosisFilter, dateFilter);
             return patients ?? null;
         }
 

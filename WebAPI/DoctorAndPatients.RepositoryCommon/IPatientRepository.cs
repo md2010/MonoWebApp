@@ -1,4 +1,5 @@
-﻿using DoctorAndPatients.Model;
+﻿using DoctorAndPatients.Common;
+using DoctorAndPatients.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace DoctorAndPatients.RepositoryCommon
     public interface IPatientRepository
     {
         Task<Patient> GetByIDAsync(Guid id);
-        Task<List<Patient>> GetAllAsync();
+        Task<List<Patient>> GetAllAsync(Paging paging, Sort sortBy, 
+            DiagnosisFilter diagnosisFilter, DateOfBirthFilter dateFilter);
         Task<bool> UpdateAsync(Guid id, Patient patient);
         Task<bool> CreateAsync(Patient patient);
         Task<bool> DeleteAsync(Guid id);

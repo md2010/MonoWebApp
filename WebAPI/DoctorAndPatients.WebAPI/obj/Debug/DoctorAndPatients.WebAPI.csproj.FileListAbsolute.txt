@@ -225,3 +225,10 @@ C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\System.Diagnostics.DiagnosticSource.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\System.Memory.xml
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\System.Numerics.Vectors.xml
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\AutoMapper.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\AutoMapper.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\AutoMapper.xml
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\DoctorAndPatients.Common.dll
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.WebAPI\bin\DoctorAndPatients.Common.pdb

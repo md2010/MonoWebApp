@@ -18,15 +18,7 @@ namespace DoctorAndPatients.WebAPI.Models
 
         // foreign key - relation one doctor has many patients, patient has one doctor
         public Guid DoctorId { get; set; }
-
-        public PatientREST(Guid id, string firstName, string lastName, int hsNumber, string diagnosis, Guid doctorId)
-        {
-            this.Id = id;
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.HealthInsuranceID = hsNumber;
-            this.Diagnosis = diagnosis;
-            this.DoctorId = doctorId;
-        }
+        public DateTime DateOfBirth { get; set; }
+      
     }
 }
