@@ -36,9 +36,9 @@ namespace DoctorAndPatients.WebAPI.Controllers
             string order = "", string diagnosis="", string dateOfBirth="")
         {
             DiagnosisFilter diagnosisFilter = null;
-            diagnosisFilter = diagnosis == "" ? null : new DiagnosisFilter(diagnosis);
+            diagnosisFilter =  String.IsNullOrEmpty(diagnosis) ? null : new DiagnosisFilter(diagnosis);
             DateOfBirthFilter dateFilter = null;
-            dateFilter = dateOfBirth == "" ? null : new DateOfBirthFilter(dateOfBirth);
+            dateFilter = String.IsNullOrEmpty(dateOfBirth) ? null : new DateOfBirthFilter(dateOfBirth);
             Paging paging = new Paging(rpp, pageNumber);
             Sort sort = new Sort(sortBy, order);
 

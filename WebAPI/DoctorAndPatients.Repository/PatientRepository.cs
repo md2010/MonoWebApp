@@ -83,12 +83,13 @@ namespace DoctorAndPatients.Repository
                 sb.Append("SELECT * FROM patient ");
 
                 if(diagnosisFilter != null)
+                    if(String.IsNullOrEmpty(diagnosisFilter.Diagnosis))
                 {
                     sb.Append("WHERE diagnosis = @diagnosis ");
                 }
-                if(dateFilter != default)
+                if(dateFilter != null)
                 {
-                    if (diagnosisFilter != null)
+                    if (dateFilter.DateOfBirth != default)
                     {
                         sb.Append("AND dateOfBirth >= @date ");
                     } 
@@ -100,11 +101,11 @@ namespace DoctorAndPatients.Repository
 
                 if(sort.SortOrder == "asc")
                 {
-                    sb.Append("ORDER BY lastName ASC ");
+                    sb.Append($"ORDER BY {sort.SortBy} ASC ");
                 }
                 else
                 {
-                    sb.Append("ORDER BY lastName DESC ");
+                    sb.Append($"ORDER BY {sort.SortBy} DESC ");
                 }           
 
                 int offset = (paging.PageNumber - 1) * paging.Rpp;
@@ -114,7 +115,7 @@ namespace DoctorAndPatients.Repository
                 MySqlCommand command = new MySqlCommand(sb.ToString(), conn);
                 command.Parameters.Add("@rpp", MySqlDbType.Int32, 4, "rpp").Value = paging.Rpp;
                 command.Parameters.Add("@offset", MySqlDbType.Int32, 4, "offset").Value = offset;
-                if(diagnosisFilter != null) 
+                if(String.IsNullOrEmpty(diagnosisFilter.Diagnosis)) 
                     command.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = diagnosisFilter.Diagnosis;
                 if(dateFilter != default)
                     command.Parameters.Add("@date", MySqlDbType.DateTime).Value = dateFilter.DateOfBirth;

@@ -102,7 +102,7 @@ namespace DoctorAndPatients.Repository
                 MySqlCommand command = new MySqlCommand(sb.ToString(), conn);
                 command.Parameters.Add("@rpp", MySqlDbType.Int32, 4, "rpp").Value = paging.Rpp;
                 command.Parameters.Add("@offset", MySqlDbType.Int32, 4, "offset").Value = offset;
-                if (filter.AmbulanceAddress != "")
+                if (String.IsNullOrEmpty(filter.AmbulanceAddress))
                     command.Parameters.Add("@address", MySqlDbType.VarChar, 20, "ambulanceAddress")
                         .Value = filter.AmbulanceAddress;
 

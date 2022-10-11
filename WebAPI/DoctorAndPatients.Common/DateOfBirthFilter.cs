@@ -13,7 +13,7 @@ namespace DoctorAndPatients.Common
 
         public DateOfBirthFilter(string dateOfBirth)
         {
-            this.DateOfBirth = dateOfBirth == "" ? default : DateTime.ParseExact(dateOfBirth, pattern,null);
+            this.DateOfBirth = DateTime.ParseExact(dateOfBirth, pattern,null);
         }
     }
 }
