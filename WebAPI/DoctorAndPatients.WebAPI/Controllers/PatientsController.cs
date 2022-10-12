@@ -146,6 +146,11 @@ namespace DoctorAndPatients.WebAPI.Controllers
         private List<Sort> ResolveSortURLParameters(string sort)
         {
             List<Sort> sorts = new List<Sort>();
+            if (String.IsNullOrWhiteSpace(sort))
+            {
+                sorts.Add(new Sort("", ""));
+                return sorts;
+            }
             string[] splitted = sort.Split(',');
             foreach(string s in splitted)
             {
