@@ -13,8 +13,8 @@ namespace DoctorAndPatients.Common
 
         public Sort(string sortBy, string order)
         {
-            this.SortBy = String.IsNullOrEmpty(sortBy) ? "" : sortBy;
-            this.SortOrder = String.IsNullOrEmpty(order) ? "asc" : order;
+            this.SortBy = String.IsNullOrWhiteSpace(sortBy) ? "createdAt" : sortBy;
+            this.SortOrder = String.IsNullOrWhiteSpace(order) ? "asc" : order;
         }
     }
 }

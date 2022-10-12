@@ -19,5 +19,6 @@ namespace DoctorAndPatients.Model.Common
         // foreign key - relation one doctor has many patients, patient has one doctor
         Guid DoctorId { get; set; }
         DateTime DateOfBirth { get; set; }
+        DateTime CreatedAt { get; set; }
     }
 }

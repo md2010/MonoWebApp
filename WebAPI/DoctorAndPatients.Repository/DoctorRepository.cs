@@ -72,7 +72,7 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        public async Task<List<Doctor>> FindAsync(Paging paging, Sort sort,
+        public async Task<List<Doctor>> FindAsync(Paging paging, List<Sort> sorts,
             AmbulanceAddressFilter filter)
         {
             PrepareForConnection();
@@ -86,13 +86,16 @@ namespace DoctorAndPatients.Repository
                     if(filter.AmbulanceAddress != "")
                         sb.Append("WHERE ambulanceAddress = @address ");
                 }
-                if (sort.SortOrder == "asc")
+
+                sb.Append("ORDER BY ");
+                for (int i = 0; i < sorts.Count; i++)
                 {
-                    sb.Append($"ORDER BY {sort.SortBy} ASC ");
-                }
-                else
-                {
-                    sb.Append($"ORDER BY {sort.SortBy} DESC ");
+                    if (sorts[i].SortOrder == "asc")
+                        sb.Append($"{sorts[i].SortBy} ASC ");
+                    else
+                        sb.Append($"{sorts[i].SortBy} DESC ");
+                    if (i < (sorts.Count - 1))
+                        sb.Append(", ");
                 }
 
                 int offset = (paging.PageNumber - 1) * paging.Rpp;
@@ -102,7 +105,7 @@ namespace DoctorAndPatients.Repository
                 MySqlCommand command = new MySqlCommand(sb.ToString(), conn);
                 command.Parameters.Add("@rpp", MySqlDbType.Int32, 4, "rpp").Value = paging.Rpp;
                 command.Parameters.Add("@offset", MySqlDbType.Int32, 4, "offset").Value = offset;
-                if (String.IsNullOrEmpty(filter.AmbulanceAddress))
+                if (String.IsNullOrWhiteSpace(filter.AmbulanceAddress))
                     command.Parameters.Add("@address", MySqlDbType.VarChar, 20, "ambulanceAddress")
                         .Value = filter.AmbulanceAddress;
 
@@ -198,14 +201,13 @@ namespace DoctorAndPatients.Repository
 
         private Doctor MapToObject(IDataRecord dataRecord)
         {
-            Doctor doctor = new Doctor(
-                (Guid)(dataRecord[0]),
-                Convert.ToString(dataRecord[1]),
-                Convert.ToString(dataRecord[2]),
-                Convert.ToString(dataRecord[3]),
-                Convert.ToString(dataRecord[4]),
-                Convert.ToDateTime(dataRecord[5])
-            );
+            Doctor doctor = new Doctor();
+            doctor.Id = (Guid)(dataRecord[0]);
+            doctor.FirstName = Convert.ToString(dataRecord[1]);
+            doctor.LastName = Convert.ToString(dataRecord[2]);
+            doctor.UPIN = Convert.ToString(dataRecord[3]);
+            doctor.AmbulanceAddress = Convert.ToString(dataRecord[4]);
+            doctor.CreatedAt = Convert.ToDateTime(dataRecord[5]);           
             return doctor;
         }
     }

@@ -21,9 +21,11 @@ namespace DoctorAndPatients.Model
         public Guid DoctorId { get; set; }
 
         public DateTime DateOfBirth { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         //for method in repo MapToObject
-        public Patient(Guid id, string firstName, string lastName, int hsNumber, string diagnosis, Guid doctorId, DateTime dateOfBirth)
+        /*public Patient(Guid id, string firstName, string lastName, int hsNumber, string diagnosis, 
+            Guid doctorId, DateTime dateOfBirth, DateTime createdat)
         {
             this.Id = id;
             this.FirstName = firstName;
@@ -32,6 +34,7 @@ namespace DoctorAndPatients.Model
             this.Diagnosis = diagnosis;
             this.DoctorId = doctorId;
             this.DateOfBirth = dateOfBirth;
-        }
+            this.CreatedAt = createdat;
+        }*/
     }
 }

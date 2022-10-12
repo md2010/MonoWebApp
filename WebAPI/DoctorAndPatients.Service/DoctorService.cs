@@ -44,11 +44,11 @@ namespace DoctorAndPatients.Service
             }
         }
 
-        public async Task<List<Doctor>> FindAsync(Paging paging, Sort sortBy, 
+        public async Task<List<Doctor>> FindAsync(Paging paging, List<Sort> sorts, 
             AmbulanceAddressFilter ambulanceAddressFilter)
         {
             List<Doctor> doctors = new List<Doctor>();
-            doctors = await doctorRepository.FindAsync(paging, sortBy, ambulanceAddressFilter);
+            doctors = await doctorRepository.FindAsync(paging, sorts, ambulanceAddressFilter);
             return doctors ?? null;
         }
 

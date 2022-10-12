@@ -19,15 +19,5 @@ namespace DoctorAndPatients.Model
         public string AmbulanceAddress { get; set; }
         public DateTime CreatedAt { get; set; }
         
-        //for method in repo MapToObject
-        public Doctor(Guid id, string firstName, string lastName, string upin, string address, DateTime createdAt)
-        {
-            this.Id = id;
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.UPIN = upin;
-            this.AmbulanceAddress = address;
-            this.CreatedAt = createdAt;
-        }
     }
 }

@@ -3,7 +3,6 @@ C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\bin\Debug\AutoMapper.dll
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\bin\Debug\AutoMapper.pdb
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\bin\Debug\AutoMapper.xml
-C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\obj\Debug\DoctorAndPatients.Common.csproj.AssemblyReference.cache
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\obj\Debug\DoctorAndPatients.Common.csproj.CoreCompileInputs.cache
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\obj\Debug\DoctorAndPatients.Common.csproj.CopyComplete
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\obj\Debug\DoctorAndPatients.Common.dll

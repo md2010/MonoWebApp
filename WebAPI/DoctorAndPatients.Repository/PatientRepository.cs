@@ -72,7 +72,7 @@ namespace DoctorAndPatients.Repository
             }
         }
 
-        public async Task<List<Patient>> GetAllAsync(Paging paging, Sort sort, 
+        public async Task<List<Patient>> FindAsync(Paging paging, List<Sort> sorts, 
             DiagnosisFilter diagnosisFilter, DateOfBirthFilter dateFilter)
         {
             PrepareForConnection();
@@ -80,34 +80,32 @@ namespace DoctorAndPatients.Repository
             {
                 //paging, sorting, filtering
                 StringBuilder sb = new StringBuilder();
-                sb.Append("SELECT * FROM patient ");
+                sb.Append("SELECT * FROM patient WHERE 1=1 ");
 
                 if(diagnosisFilter != null)
-                    if(String.IsNullOrEmpty(diagnosisFilter.Diagnosis))
+                    if(String.IsNullOrWhiteSpace(diagnosisFilter.Diagnosis))
                 {
-                    sb.Append("WHERE diagnosis = @diagnosis ");
+                    sb.Append("AND diagnosis = @diagnosis ");
                 }
                 if(dateFilter != null)
                 {
                     if (dateFilter.DateOfBirth != default)
                     {
                         sb.Append("AND dateOfBirth >= @date ");
-                    } 
+                    }                    
+                }
+
+                sb.Append("ORDER BY ");
+                for(int i = 0; i < sorts.Count; i++)
+                {
+                    if (sorts[i].SortOrder == "asc")
+                        sb.Append($"{sorts[i].SortBy} ASC ");
                     else
-                    {
-                        sb.Append("WHERE dateOfBirth >= @date ");
-                    }
-                }
-
-                if(sort.SortOrder == "asc")
-                {
-                    sb.Append($"ORDER BY {sort.SortBy} ASC ");
-                }
-                else
-                {
-                    sb.Append($"ORDER BY {sort.SortBy} DESC ");
-                }           
-
+                        sb.Append($"{sorts[i].SortBy} DESC ");
+                    if(i < (sorts.Count - 1))
+                        sb.Append(", ");
+                }              
+                          
                 int offset = (paging.PageNumber - 1) * paging.Rpp;
                 sb.Append("LIMIT @rpp OFFSET @offset");
 
@@ -115,9 +113,9 @@ namespace DoctorAndPatients.Repository
                 MySqlCommand command = new MySqlCommand(sb.ToString(), conn);
                 command.Parameters.Add("@rpp", MySqlDbType.Int32, 4, "rpp").Value = paging.Rpp;
                 command.Parameters.Add("@offset", MySqlDbType.Int32, 4, "offset").Value = offset;
-                if(String.IsNullOrEmpty(diagnosisFilter.Diagnosis)) 
+                if(diagnosisFilter != null && String.IsNullOrWhiteSpace(diagnosisFilter.Diagnosis)) 
                     command.Parameters.Add("@diagnosis", MySqlDbType.VarChar, 100, "diagnosis").Value = diagnosisFilter.Diagnosis;
-                if(dateFilter != default)
+                if(dateFilter != null && dateFilter.DateOfBirth != default)
                     command.Parameters.Add("@date", MySqlDbType.DateTime).Value = dateFilter.DateOfBirth;
 
                 conn.Open();
@@ -125,7 +123,7 @@ namespace DoctorAndPatients.Repository
 
                 List<Patient> list = new List<Patient>();               
                 while (await reader.ReadAsync())
-                {
+                {                   
                     list.Add(MapToObject(reader));
                 }
                 conn.Close();
@@ -155,12 +153,11 @@ namespace DoctorAndPatients.Repository
                     return null;
                 }
                 
-                Patient patient = null;
+                Patient patient = new Patient();
                 while (await reader.ReadAsync())
                 {
-                    patient = MapToObject(reader);
+                    patient = MapToObject(reader);                  
                 }
-
                 conn.Close();
                 return patient;
             }
@@ -210,21 +207,24 @@ namespace DoctorAndPatients.Repository
             patient.HealthInsuranceID = patient.HealthInsuranceID == 0 ? patientDB.HealthInsuranceID : patient.HealthInsuranceID;
             patient.Diagnosis = patient.Diagnosis == null ? patientDB.Diagnosis : patient.Diagnosis;
             patient.DoctorId = patient.DoctorId == default(Guid) ? patientDB.DoctorId : patient.DoctorId;
+            patient.DateOfBirth = patientDB.DateOfBirth;
+            patient.CreatedAt = patientDB.CreatedAt;
             return patient;
         }
 
-        private Patient MapToObject(IDataRecord dataRecord)
+        private Patient MapToObject(IDataRecord reader)
         {
-            Patient patient = new Patient(
-                (Guid)(dataRecord[0]),
-                Convert.ToString(dataRecord[1]),
-                Convert.ToString(dataRecord[2]),
-                Convert.ToInt32(dataRecord[3]),
-                Convert.ToString(dataRecord[4]),
-                (Guid)(dataRecord[5]),
-                Convert.ToDateTime(dataRecord[6])
-            );
+            Patient patient = new Patient();
+            patient.Id = (Guid)(reader[0]);
+            patient.FirstName = Convert.ToString(reader[1]);
+            patient.LastName = Convert.ToString(reader[2]);
+            patient.HealthInsuranceID = Convert.ToInt32(reader[3]);
+            patient.Diagnosis = Convert.ToString(reader[4]);
+            patient.DoctorId = (Guid)(reader[5]);
+            patient.DateOfBirth = Convert.ToDateTime(reader[6]);
+            patient.CreatedAt = Convert.ToDateTime(reader[7]);
             return patient;
         }
+        
     }
 }

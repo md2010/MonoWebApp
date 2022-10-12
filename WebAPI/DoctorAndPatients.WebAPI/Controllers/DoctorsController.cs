@@ -33,13 +33,13 @@ namespace DoctorAndPatients.WebAPI.Controllers
         // GET: api/Doctors
         [HttpGet]
         public async Task<HttpResponseMessage> FindAsync(int rpp = 0, int pageNumber = 0, 
-            string sortBy = "", string sortOrder="", string ambulanceAddress="")
+            string sort = "", string ambulanceAddress="")
         {
             Paging paging = new Paging(rpp, pageNumber);
-            Sort sort = new Sort(sortBy, sortOrder);
+            List<Sort> sorts = ResolveSortURLParameters(sort);
             AmbulanceAddressFilter ambulanceAddressFilter = new AmbulanceAddressFilter(ambulanceAddress);
 
-            List<Doctor> doctors = await doctorService.FindAsync(paging, sort, ambulanceAddressFilter);
+            List<Doctor> doctors = await doctorService.FindAsync(paging, sorts, ambulanceAddressFilter);
 
             if(doctors.Any())
             {
@@ -138,43 +138,19 @@ namespace DoctorAndPatients.WebAPI.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Something went wrong.");
             }
-        }   
-        
-        /*private List<Doctor> MapToDomain(List<DoctorREST> doctorsRest)
-        {
-            List<Doctor> doctors = new List<Doctor>();
-            if (doctors.Any())
-            {
-                foreach (DoctorREST docREST in doctorsRest)
-                {                    
-                    Doctor doctor = new Doctor(docREST.Id.Value, docREST.FirstName, docREST.LastName, "", docREST.AmbulanceAddress);
-                    doctors.Add(doctor);
-                }
-                return doctors;
-            } 
-            else
-            {
-                return null;
-            }
         }
 
-        private List<DoctorREST> MapToREST(List<Doctor> doctors)
+        private List<Sort> ResolveSortURLParameters(string sort)
         {
-            List<DoctorREST> doctorsREST = new List<DoctorREST>();
-            if (doctors.Any())
+            List<Sort> sorts = new List<Sort>();
+            string[] splitted = sort.Split(',');
+            foreach (string s in splitted)
             {
-                foreach (Doctor doc in doctors)
-                {              
-                    DoctorREST doctor = new DoctorREST((Guid)doc.Id, doc.FirstName, doc.LastName, doc.AmbulanceAddress);
-                    doctorsREST.Add(doctor);
-                }
-                return doctorsREST;
+                string[] properties = s.Split('|');
+                sorts.Add(new Sort(properties[0], properties[1]));
             }
-            else
-            {
-                return null;
-            }
-        } */
-        
+            return sorts.Distinct().ToList(); //so there's no same sorting requests --> query exception
+        }
+
     }
 }

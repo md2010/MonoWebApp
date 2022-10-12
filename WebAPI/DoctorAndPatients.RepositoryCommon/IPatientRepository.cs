@@ -11,7 +11,7 @@ namespace DoctorAndPatients.RepositoryCommon
     public interface IPatientRepository
     {
         Task<Patient> GetByIDAsync(Guid id);
-        Task<List<Patient>> GetAllAsync(Paging paging, Sort sortBy, 
+        Task<List<Patient>> FindAsync(Paging paging, List<Sort> sorts, 
             DiagnosisFilter diagnosisFilter, DateOfBirthFilter dateFilter);
         Task<bool> UpdateAsync(Guid id, Patient patient);
         Task<bool> CreateAsync(Patient patient);

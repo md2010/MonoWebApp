@@ -32,23 +32,24 @@ namespace DoctorAndPatients.WebAPI.Controllers
 
         // GET: api/Patients
         [HttpGet]
-        public async Task<HttpResponseMessage> GetAllAsync(int rpp=0, int pageNumber=0, string sortBy = "", 
-            string order = "", string diagnosis="", string dateOfBirth="")
+        public async Task<HttpResponseMessage> FindAsync(int rpp=0, int pageNumber=0, 
+            string sort = "", string diagnosis="", string dateOfBirth="")
         {
             DiagnosisFilter diagnosisFilter = null;
-            diagnosisFilter =  String.IsNullOrEmpty(diagnosis) ? null : new DiagnosisFilter(diagnosis);
+            diagnosisFilter =  String.IsNullOrWhiteSpace(diagnosis) ? null : new DiagnosisFilter(diagnosis);
             DateOfBirthFilter dateFilter = null;
-            dateFilter = String.IsNullOrEmpty(dateOfBirth) ? null : new DateOfBirthFilter(dateOfBirth);
+            dateFilter = String.IsNullOrWhiteSpace(dateOfBirth) ? null : new DateOfBirthFilter(dateOfBirth);
             Paging paging = new Paging(rpp, pageNumber);
-            Sort sort = new Sort(sortBy, order);
+            //Sort sort = new Sort(sortBy, order);
+            List<Sort> sorts = ResolveSortURLParameters(sort);
 
-            List<Patient> patients = await patientService.GetAllAsync(paging, sort, diagnosisFilter, dateFilter);            
+            List<Patient> patients = await patientService.FindAsync(paging, sorts, diagnosisFilter, dateFilter);            
 
             if (patients.Any())
             {
                 List<PatientREST> patientsREST = new List<PatientREST>();
                 patientsREST = mapper.Map(patients, patientsREST);
-
+            
                 return Request.CreateResponse(HttpStatusCode.OK, patientsREST);
             }
             else
@@ -142,42 +143,17 @@ namespace DoctorAndPatients.WebAPI.Controllers
             }
         }
 
-
-        /*private List<Patient> MapToDomain(List<PatientREST> patientsRest)
+        private List<Sort> ResolveSortURLParameters(string sort)
         {
-            List<Patient> patients = new List<Patient>();
-            if (patientsRest.Any())
+            List<Sort> sorts = new List<Sort>();
+            string[] splitted = sort.Split(',');
+            foreach(string s in splitted)
             {
-                foreach (PatientREST pREST in patientsRest)
-                {
-                    Patient patient = new Patient(pREST.Id.Value, pREST.FirstName, pREST.LastName, pREST.HealthInsuranceID, pREST.Diagnosis, pREST.DoctorId);
-                    patients.Add(patient);
-                }
-                return patients;
+                string[] properties = s.Split('|');
+                sorts.Add(new Sort(properties[0], properties[1]));
             }
-            else
-            {
-                return null;
-            }
+            return sorts.Distinct().ToList(); //so there's no same sorting requests --> query exception
         }
-
-        private List<PatientREST> MapToREST(List<Patient> patients)
-        {
-            List<PatientREST> patientsREST = new List<PatientREST>();
-            if (patients.Any())
-            {
-                foreach (Patient p in patients)
-                {
-                    PatientREST patient = new PatientREST((Guid)p.Id, p.FirstName, p.LastName, p.HealthInsuranceID, p.Diagnosis, p.DoctorId);
-                    patientsREST.Add(patient);
-                }
-                return patientsREST;
-            }
-            else
-            {
-                return null;
-            }
-        } */
        
     }
 }

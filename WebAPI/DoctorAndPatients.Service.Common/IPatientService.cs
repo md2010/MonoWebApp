@@ -11,7 +11,7 @@ namespace DoctorAndPatients.Service.Common
     public interface IPatientService
     {
         Task<Patient> GetByIDAsync(Guid id);
-        Task<List<Patient>> GetAllAsync(Paging paging, Sort sortBy, 
+        Task<List<Patient>> FindAsync(Paging paging, List<Sort> sorts, 
             DiagnosisFilter diagnosisFilter, DateOfBirthFilter dateFilter);
         Task<bool> UpdateAsync(Guid id, Patient patients);
         Task<bool> CreateAsync(List<Patient> patients);
