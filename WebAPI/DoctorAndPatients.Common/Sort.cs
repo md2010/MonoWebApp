@@ -11,6 +11,11 @@ namespace DoctorAndPatients.Common
         public string SortBy { get; set; }
         public string SortOrder { get; set; }
 
+        public Sort()
+        {
+            this.SortBy = "createdAt";
+            this.SortOrder = "asc";
+        }
         public Sort(string sortBy, string order)
         {
             this.SortBy = String.IsNullOrWhiteSpace(sortBy) ? "createdAt" : sortBy;

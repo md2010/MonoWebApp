@@ -7,3 +7,4 @@ C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\obj\Debug\DoctorAndPatients.Common.csproj.CopyComplete
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\obj\Debug\DoctorAndPatients.Common.dll
 C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\obj\Debug\DoctorAndPatients.Common.pdb
+C:\Users\Martina\source\repos\DoctorAndPatients\WebAPI\DoctorAndPatients.Common\obj\Debug\DoctorAndPatients.Common.csproj.AssemblyReference.cache

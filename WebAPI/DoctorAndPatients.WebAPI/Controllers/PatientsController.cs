@@ -148,7 +148,7 @@ namespace DoctorAndPatients.WebAPI.Controllers
             List<Sort> sorts = new List<Sort>();
             if (String.IsNullOrWhiteSpace(sort))
             {
-                sorts.Add(new Sort("", ""));
+                sorts.Add(new Sort());
                 return sorts;
             }
             string[] splitted = sort.Split(',');
